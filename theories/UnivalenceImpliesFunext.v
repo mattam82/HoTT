@@ -76,10 +76,12 @@ Section UnivalenceImpliesWeakFunext.
     intros allcontr.
     (* We are going to replace [P] with something simpler. *)
     pose (U := (fun (_ : A) => unit)).
-    assert (p : P = U).
-    apply (univalence_implies_funext univalence eta_rule).
+    pose (uf:=univalence_implies_funext univalence eta_rule).
+    pose (ep:=@equiv_to_path univalence). 
+    unfold funext_statement in uf. 
+    assert (p : P = U). apply uf.
     intro x.
-    apply (equiv_to_path univalence2).
+    apply ep.
     apply contr_equiv_unit.
     apply allcontr.
     rewrite p.
