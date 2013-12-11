@@ -33,7 +33,7 @@ Lemma istrunc_nullhomotopy {n : trunc_index}
 Proof.
   apply @trunc_sigma; auto.
   intros y. apply (@trunc_forall _).
-  intros x. apply trunc_succ.
+  intros x. apply (trunc_succ (f x) y).
 Defined.
 
 End NullHomotopy.
@@ -81,7 +81,7 @@ Lemma istrunc_equiv {n : trunc_index} {A B : Type} `{IsTrunc (trunc_S n) B}
 Proof.
   simpl. intros e1 e2.
   apply (@trunc_equiv _ _ (equiv_path_equiv e1 e2)).
-    apply (@trunc_arrow _ A B (trunc_S n) _).
+    apply (@trunc_arrow _ A B (trunc_S n) _ (*FIXME: weird behavior... *) _ _).
   apply equiv_isequiv.
 Defined.
 

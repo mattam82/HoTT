@@ -63,7 +63,7 @@ Section path_functor.
     destruct F, G; simpl in *.
     path_induction; simpl.
     f_ap;
-      eapply @center; abstract exact _.
+      eapply @center; typeclasses eauto. (* (* MS: Bug! abstract*) exact _. *)
   Defined.
 
   Lemma path_functor'_sig_fst F G HO HM

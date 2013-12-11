@@ -29,7 +29,7 @@ Section composition.
   Defined.
   Definition compose_composition_of s d d' m1 m2
     := Eval cbv beta iota zeta delta
-            [compose_composition_of' internal_paths_rew] in
+            [compose_composition_of'] in
         @compose_composition_of' s d d' m1 m2.
 
   Let compose_identity_of' x
@@ -40,7 +40,7 @@ Section composition.
   Defined.
   Definition compose_identity_of x
     := Eval cbv beta iota zeta delta
-            [compose_identity_of' internal_paths_rew] in
+            [compose_identity_of'] in
         @compose_identity_of' x.
 
   Global Arguments compose_composition_of / .

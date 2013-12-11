@@ -101,7 +101,9 @@ Proof.
   let f' := fresh in
   let g' := fresh in
   intros f' g' ? ?;
-    assert (f' = g'); [ | path_induction; apply ap; apply allpath_hprop ].
+    assert (f' = g'). (* MS: BUG! fix for path_induction again
+  ; [ | path_induction; apply ap; apply allpath_hprop ].*)
+  Focus 2. induction pf1. induction X0. apply ap. apply allpath_hprop.
   apply path_forall; intro.
   apply allpath_hprop.
 Qed.
