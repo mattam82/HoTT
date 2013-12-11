@@ -78,7 +78,7 @@ Section IsEquivHomotopic.
     apply whiskerR, eisadj.
   Qed.
 
-  (* It's unclear to me whether this should be a declared instance.  Will it cause the unifier to spin forever searching for homotopies?  For now, we give it a very large priority number, which means that other instances will be preferred over this one. *)
+  (* It's unclear to me whether this should be a declared instance.  Will it cause the unifier to spin forever searching for homotopies?  For now, we give it a very llarge priority number, which means that other instances will be preferred over this one. *)
   Global Instance isequiv_homotopic : IsEquiv g | 10000
     := BuildIsEquiv _ _ g (f ^-1) sect retr adj.
 

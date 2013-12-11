@@ -282,8 +282,9 @@ Definition path_path_sigma_uncurried {A : Type} (P : A -> Type) (u v : sigT P)
 Proof.
   destruct rs, p, u.
   etransitivity; [ | apply eta_path_sigma ].
-  path_induction.
-  reflexivity.
+  (* MS: BUG! fix for path induction eliminating a x = x hyp and messing with universes *)
+  intros. induction p0. induction x. reflexivity.  
+  (* path_induction. reflexivity. *)
 Defined.
 
 (** This is the curried one you usually want to use in practice.  We define it in terms of the uncurried one, since it's the uncurried one that is proven below to be an equivalence. *)
