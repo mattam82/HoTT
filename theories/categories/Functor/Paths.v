@@ -62,8 +62,7 @@ Section path_functor.
     intros [? ?].
     destruct F, G; simpl in *.
     path_induction; simpl.
-    f_ap;
-      eapply @center; typeclasses eauto. (* (* MS: Bug! abstract*) exact _. *)
+    f_ap; abstract (apply center; exact _).
   Defined.
 
   Lemma path_functor'_sig_fst F G HO HM
@@ -77,6 +76,7 @@ Section path_functor.
   : @path_functor'_sig F F (idpath; idpath) = idpath.
   Proof.
     destruct F; simpl in *.
+    unfold path_functor'_sig_subproof0, path_functor'_sig_subproof.
     rewrite !(contr idpath).
     reflexivity.
   Qed.
