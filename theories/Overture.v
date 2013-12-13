@@ -368,7 +368,13 @@ Ltac path_via mid :=
   apply @concat with (y := mid); auto with path_hints.
 
 (** We put [Empty] here, instead of in [Empty.v], because [Ltac done] uses it. *)
-Inductive Empty : Type := .
+
+Unset Elimination Schemes.
+
+Inductive Empty : Set (* Should be Type(i) for any i *) := .
+Scheme Empty_rect := Minimality for Empty Sort Type.
+
+Set Elimination Schemes.
 
 Definition not (A:Type) : Type := A -> Empty.
 Notation "~ x" := (not x) : type_scope.
