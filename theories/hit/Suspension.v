@@ -11,7 +11,7 @@ Generalizable Variables X A B f g n.
 
 Module Export Suspension.
 
-Local Inductive Susp (X : Type) : Type :=
+Private Inductive Susp (X : Type) : Type :=
   | North : Susp X
   | South : Susp X.
 

@@ -112,7 +112,7 @@ Qed.
 
 Open Local Scope path_scope.
 
-Theorem PowisoFam : BiInv p2f.
+Theorem PowisoFam `{Funext} : BiInv p2f.
 split.
  (* Theorem left (P:A -> Type) : (f2pp2f P) = P *)
  exists f2p. intro P. by_extensionality a.
@@ -131,9 +131,9 @@ exists (path_universe w). path_via (exp w f). apply transport_exp.
 apply fs. by  (intros [a [i p]]).
 Qed.
 
-Corollary FamequivPow : (A->Type)<~>(Fam A).
+Corollary FamequivPow `{Funext} : (A->Type)<~>(Fam A).
 exists p2f.
-apply (equiv_biinv_equiv _).  exact PowisoFam.
+apply (equiv_biinv_equiv _). exact PowisoFam.
 Qed.
 
 (* We construct the universal diagram for the object classifier *)

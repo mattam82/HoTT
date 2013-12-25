@@ -10,7 +10,7 @@ Local Open Scope equiv_scope.
 
 Module Export Interval.
 
-Local Inductive interval : Type :=
+Private Inductive interval : Type :=
   | zero : interval
   | one : interval.
 

@@ -12,7 +12,7 @@ Local Open Scope equiv_scope.
 
 Module Export BaseHIT.
 
-Local Inductive W (A B : Type) (f g : B -> A) : Type :=
+Private Inductive W (A B : Type) (f g : B -> A) : Type :=
 | cc : A -> W A B f g.
 
 Arguments cc {A B f g} a.
@@ -53,7 +53,7 @@ Defined.
 
 Module Export FlattenedHIT.
 
-Local Inductive Wtil (A B : Type) (f g : B -> A)
+Private Inductive Wtil (A B : Type) (f g : B -> A)
   (C : A -> Type) (D : forall b, C (f b) <~> C (g b))
   : Type :=
 | cct : forall a, C a -> Wtil A B f g C D.
@@ -206,14 +206,17 @@ Definition sWtil_rectnd_beta_ppt (Q : Type)
   : ap (sWtil_rectnd Q scct' sppt') (sppt b y) = sppt' b y.
 Proof.
   unfold sWtil_rectnd, sppt.
-  refine (@ap_sigT_rectnd_path_sigma W' P Q _ _ (pp b) _ _ _ _ @ _); simpl.
-  rewrite (@W_rect_beta_pp A B f g).
-  rewrite (ap10_dpath_arrow P (fun _ => Q) (pp b) _ _ _ y).
-  repeat rewrite concat_p_pp.
-  (* Now everything cancels! *)
-  rewrite ap_V, concat_pV_p, concat_pV_p, concat_pV_p, concat_Vp.
-  by apply concat_1p.
+  refine (@ap_sigT_rectnd_path_sigma W' P Q _ _ (pp b) _ _ _ _ @ _). simpl.
+  admit.
 Qed.
+(* MS: FIXME *)
+(*   rewrite (@W_rect_beta_pp A B f g).  *)
+(*   (* pose (ap10_dpath_arrow P (fun _ => Q) (pp b) _ _ _ y). *) *)
+(*   repeat rewrite concat_p_pp. *)
+(*   (* Now everything cancels! *) *)
+(*   rewrite ap_V, concat_pV_p, concat_pV_p, concat_pV_p, concat_Vp. *)
+(*   by apply concat_1p. *)
+(* Qed. *)
 
 Close Scope long_path_scope.
 
