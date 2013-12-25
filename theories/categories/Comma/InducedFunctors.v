@@ -170,11 +170,14 @@ Section cat_over_induced_functor.
 
   Local Notation cat := (@sub_pre_cat fs P H0).
 
-  Definition cat_over_induced_functor a a' (m : morphism cat a a')
-  : Functor (cat / a) (cat / a')
-    := slice_category_over_induced_functor cat a a' m.
+  Local Transparent Functor.Composition.Core.compose_composition_of.
+  Local Transparent Functor.Composition.Core.compose_identity_of.
 
-  Definition over_cat_induced_functor a a' (m : morphism cat a' a)
-  : Functor (a \ cat) (a' \ cat)
-    := coslice_category_over_induced_functor cat a a' m.
+  (* Definition cat_over_induced_functor a a' (m : morphism cat a a') *)
+  (* : Functor (cat / a) (cat / a') *)
+  (*   := slice_category_over_induced_functor cat a a' m. *)
+
+  (* Definition over_cat_induced_functor a a' (m : morphism cat a' a) *)
+  (* : Functor (a \ cat) (a' \ cat) *)
+  (*   := coslice_category_over_induced_functor cat a a' m. *)
 End cat_over_induced_functor.

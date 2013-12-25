@@ -35,7 +35,7 @@ Definition iscontr_truncation_from_isconnected {n} {A} `{IsConnected n A}
 Proof.
   set (nh := isconnected_elim (Truncation n A) (@truncation_incl n A)).
   exists (nh .1).
-  apply Truncation_rect. apply trunc_succ.
+  apply Truncation_rect. intros ?. apply (trunc_succ _ _). (*MS: same here *)
   intros; apply symmetry, (nh .2).
 Defined.
 
@@ -64,7 +64,7 @@ Definition conn_map_elim {n : trunc_index}
 Proof.
   intros b.
   apply isconnected_elim.
-    apply HP.
+    refine (HP _). (*MS: FIXME, was apply HP *)
     instantiate (1 := b). intros [a p].
     exact (transport P p (d a)).
 Defined.
@@ -170,7 +170,7 @@ Lemma allpath_extension_conn_map {n : trunc_index}
 Proof.
   apply path_extension.
   apply (extension_conn_map_elim (n := n)); try assumption.
-  intros b. apply trunc_succ.
+  intros b. apply (trunc_succ _ _). (* MS: FIXME *)
 Defined.
 
 (** Conversely, if a map satisfies this elimination principle (expressed via extensions), then it is connected.
@@ -231,7 +231,7 @@ Proof.
   intros C HC f. exists (f a0).
 (* TODO: try to use [refine] or similar to get more concise? *)
   apply (conn_map_elim (unit_name a0)).
-    intros b; apply HC.
+    intros b; apply (HC _). (*MS: FIXME was HC *)
   apply (fun _ => 1).
 Defined.
 

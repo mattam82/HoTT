@@ -29,7 +29,7 @@ The former seems more natural.
 We do not require [R] to be an equivalence relation, but implicitly consider its transitive-reflexive closure. *)
 
 
-Local Inductive quotient (sR:setrel R): Type :=
+Private Inductive quotient (sR:setrel R): Type :=
   | class_of : A -> quotient sR.
 Axiom related_classes_eq : forall {x y : A}, R x y ->
  class_of _ x = class_of _ y.
@@ -80,6 +80,7 @@ Proof.
 apply (@quotient_rect _ _ _ (fun _ => A -> Type) R).
 intros. eapply concat;[apply transport_const|].
 apply funext. intro z. apply uni. apply @equiv_iff_hprop; eauto.
+apply sR. apply sR. (* MS : Fixme, found by eauto before *)
 Defined.
 
 Context {Hrefl : Reflexive R}.
@@ -89,7 +90,7 @@ Proof.
 reflexivity.
 Defined.
 
-Global Instance in_class_is_prop : forall q x, IsHProp (in_class q x).
+Global Instance in_class_is_prop `{Funext} : forall q x, IsHProp (in_class q x).
 Proof.
 apply (@quotient_rect A R _
     (fun q : quotient sR => forall x, IsHProp (in_class q x)) (fun x y => transport _ (in_class_pr x y) (sR x y))).

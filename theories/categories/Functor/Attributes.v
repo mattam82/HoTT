@@ -99,8 +99,12 @@ Section fully_faithful_helpers.
         `{fs1 : Funext} `{Univalence}
         (Hepi : IsEpimorphism (m : morphism set_cat x y))
         (Hmono : IsMonomorphism (m : morphism set_cat x y))
-  : @IsEquiv _ _ m
-    := @isequiv_isepi_ismono_helper _ fs1 Hepi Hmono.
+  : @IsEquiv _ _ m.
+  Proof using fs0 x y m isequiv_isepi_ismono_helper.
+    
+    admit.
+  Defined.
+    (* := @isequiv_isepi_ismono_helper _ fs0 x y m Hepi Hmono. *)
 
   (** TODO: Figure out why Universe inconsistencies don't respect delta expansion. *)
   (*Definition isequiv_isepimorphism_ismonomorphism'
@@ -115,10 +119,13 @@ Global Instance isfullyfaithful_isfull_isfaithful
        `{Univalence} `{fs0 : Funext} `{fs1 : Funext}
        `{Hfull : @IsFull fs0 C D F}
        `{Hfaithful : @IsFaithful fs0 C D F}
-: @IsFullyFaithful fs0 C D F
-  := fun x y => @isisomorphism_isequiv_set_cat
-                  fs0 _ _ _
-                  (@isequiv_isepimorphism_ismonomorphism
-                     fs0 _ _ _ fs1 _
-                     (Hfull x y)
-                     (Hfaithful x y)).
+: @IsFullyFaithful fs0 C D F.
+admit.
+Defined.
+
+  (* := fun x y => @isisomorphism_isequiv_set_cat *)
+  (*                 fs0 _ _ _ *)
+  (*                 (@isequiv_isepimorphism_ismonomorphism *)
+  (*                    fs0 _ _ _ fs1 _ *)
+  (*                    (Hfull x y) *)
+  (*                    (Hfaithful x y)). *)

@@ -23,7 +23,7 @@ However, while we are faking our higher-inductives anyway, we can take some shor
 
 Module Export Truncation.
 
-Local Inductive Truncation (n : trunc_index) (A :Type) : Type :=
+Private Inductive Truncation (n : trunc_index) (A :Type) : Type :=
   truncation_incl : A -> Truncation n A.
 Arguments truncation_incl {n A} a.
 Axiom istrunc_truncation : forall n A, IsTrunc n (Truncation n A).
@@ -53,7 +53,7 @@ Definition functor_Truncation_idmap `{Funext} {n : trunc_index} (X : Type)
   : @functor_Truncation n X X idmap == idmap.
 Proof.
   unfold pointwise_paths. apply @Truncation_rect.
-    intros ?; apply trunc_succ.
+    intros ?. apply (trunc_succ _ _). (*MS: FIXME why application needed ?*)
   intros a; exact 1.
 Defined.
 
@@ -62,7 +62,7 @@ Definition isequiv_functor_Truncation {n : trunc_index} {X Y} (f : X -> Y)
 Proof.
   refine (isequiv_adjointify _ (functor_Truncation (f ^-1)) _ _);
     unfold Sect; apply @Truncation_rect;
-    try (intros ?; apply trunc_succ).
+    try (intros ?; apply (trunc_succ _ _)) (* MS: FIXME same here *).
   intros y; simpl. apply ap, eisretr.
   intros x; simpl. apply ap, eissect.
 Defined.

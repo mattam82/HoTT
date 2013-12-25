@@ -53,8 +53,9 @@ Proof.
     hott_simpl.
   refine (Susp_rect (fun x => S1_to_Sph1 (Sph1_to_S1 x) = x)
     1 (merid South) _); intros x.
-  refine ((transport_paths_FFlr _ _) @ _).
-  unfold Sph1_to_S1; rewrite (Susp_comp_nd_merid x).
+  refine ((transport_paths_FFlr _ _) @ _). (*MS: FIXME simpl was not needed before *)
+  unfold Sph1_to_S1; simpl.
+  rewrite (Susp_comp_nd_merid x).
   revert x. change (Susp Empty) with (Sphere 0).
   apply (equiv_rect (Sph0_to_Bool ^-1)); intros x.
   case x; simpl.
