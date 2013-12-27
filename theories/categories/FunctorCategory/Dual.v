@@ -17,6 +17,10 @@ Section opposite.
   Variable C : PreCategory.
   Variable D : PreCategory.
 
+  Local Transparent NaturalTransformation.Composition.Core.compose_commutes.
+  Local Transparent NaturalTransformation.Composition.Core.compose_commutes_sym.
+  Local Transparent commutes commutes_sym.
+
   Definition opposite_functor : Functor (C -> D) (C^op -> D^op)^op
     := Build_Functor
          (C -> D) ((C^op -> D^op)^op)

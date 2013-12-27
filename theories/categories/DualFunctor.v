@@ -22,6 +22,9 @@ Section opposite.
 
   Hypothesis has_op : forall C : cat, P C.1^op.
 
+  Local Transparent Functor.Composition.Core.compose_identity_of.
+  Local Transparent Functor.Composition.Core.compose_composition_of.
+
   Definition opposite_functor : Functor cat cat
     := Build_Functor
          cat cat
@@ -45,10 +48,10 @@ Section opposite.
 
   Local Opaque path_sigma_uncurried.
 
-  Definition opposite_functor_involutive
+  Definition opposite_functor_involutive `{Funext}
   : opposite_functor o opposite_functor = 1.
   Proof.
-    path_functor.
+    apply path_functor'_sig.
     refine (path_forall _ _ opposite_functor_involutive_helper; _).
     repeat (apply path_forall; intro).
     rewrite !transport_forall_constant.
@@ -56,7 +59,7 @@ Section opposite.
     unfold opposite_functor_involutive_helper.
     rewrite !transport_projT1_path_sigma_uncurried.
     simpl in *.
-    repeat progress change (fun x => ?f x) with f in *.
+    repeat progress change (fun C => P C) with P in *.
     match goal with
       | [ |- appcontext[transport
                           (fun x' => ?f x'.1 ?y)
