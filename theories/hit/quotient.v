@@ -80,7 +80,6 @@ Proof.
 apply (@quotient_rect _ _ _ (fun _ => A -> Type) R).
 intros. eapply concat;[apply transport_const|].
 apply funext. intro z. apply uni. apply @equiv_iff_hprop; eauto.
-apply sR. apply sR. (* MS : Fixme, found by eauto before *)
 Defined.
 
 Context {Hrefl : Reflexive R}.
@@ -107,14 +106,14 @@ intros. apply (quotient_rect P dclass).
 intros. apply allpath_hprop.
 Defined.
 
-Lemma class_of_repr : forall q x, in_class q x -> q = class_of _ x.
+Lemma class_of_repr `{Funext} : forall q x, in_class q x -> q = class_of _ x.
 Proof.
 apply (@quotient_rect A R _
  (fun q : quotient sR => forall x, in_class q x -> q = class_of _ x)
   (fun x y H => related_classes_eq H)).
 intros.
 apply funext. intro z.
-apply funext;intro H'.
+apply H;intro H'.
 apply quotient_path2.
 Defined.
 

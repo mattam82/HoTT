@@ -62,7 +62,7 @@ Section path_functor.
     intros [? ?].
     destruct F, G; simpl in *.
     path_induction; simpl.
-    f_ap; abstract (apply center; exact _).
+    f_ap; apply center; abstract (exact _).
   Defined.
 
   Lemma path_functor'_sig_fst F G HO HM
@@ -76,15 +76,18 @@ Section path_functor.
   : @path_functor'_sig F F (idpath; idpath) = idpath.
   Proof.
     destruct F; simpl in *.
-    unfold path_functor'_sig_subproof0, path_functor'_sig_subproof.
     rewrite !(contr idpath).
     reflexivity.
   Qed.
 
-  Definition path_functor'_sig_inv (F G : Functor C D) : F = G -> path_functor'_T F G
-    := fun H'
-       => (ap object_of H';
-           (transport_compose _ _ _ _) ^ @ apD (@morphism_of _ _) H')%path.
+  Definition path_functor'_sig_inv (F G : Functor C D) : F = G -> path_functor'_T F G.
+  Proof. 
+    intros H'.
+    refine (ap object_of H'; _).
+    pose ((transport_compose _ _ _ _) ^ @ apD (@morphism_of _ _) H')%path. 
+    (* MS: how did we avoid path induction before???*)
+    destruct H'. simpl in *. apply p.
+  Defined.
 
   Lemma path_functor' (F G : Functor C D)
   : forall HO : object_of F = object_of G,

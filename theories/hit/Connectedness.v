@@ -231,7 +231,7 @@ Proof.
   intros C HC f. exists (f a0).
 (* TODO: try to use [refine] or similar to get more concise? *)
   apply (conn_map_elim (unit_name a0)).
-    intros b; apply (HC _). (*MS: FIXME was HC *)
+    intros b. apply HC. 
   apply (fun _ => 1).
 Defined.
 

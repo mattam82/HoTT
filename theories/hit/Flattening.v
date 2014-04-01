@@ -42,7 +42,8 @@ Definition W_rectnd_beta_pp {A B f g} (P : Type) (cc' : A -> P)
   : ap (W_rectnd P cc' pp') (pp b) = pp' b.
 Proof.
   unfold W_rectnd.
-  refine (cancelL (transport_const (pp b) _) _ _ _).
+  eapply (cancelL (transport_const (pp b) _)). 
+  (* MS: if we kept refine, we'd need to [shelve] 3 goals here *)
   refine ((apD_const (@W_rect A B f g (fun _ => P) cc' _) (pp b))^ @ _).
   refine (W_rect_beta_pp (fun _ => P) _ _ _).
 Defined.
@@ -92,7 +93,9 @@ Definition Wtil_rectnd_beta_ppt
   : ap (@Wtil_rectnd A B f g C D Q cct' ppt') (ppt b y) = ppt' b y.
 Proof.
   unfold Wtil_rectnd.
-  refine (cancelL (transport_const (ppt b y) _) _ _ _).
+  eapply (cancelL (transport_const (ppt (C:=C) b y) _)). 
+  (* MS: this used to not require C, however it had to use a heuristic to decide
+   f b = ?X b by instantiating X to f, and not e.g. λ x, f b (b is in ?X's context) *)
   refine ((apD_const
     (@Wtil_rect A B f g C D (fun _ => Q) cct' _) (ppt b y))^ @ _).
   refine (Wtil_rect_beta_ppt (fun _ => Q) _ _ _ _).
