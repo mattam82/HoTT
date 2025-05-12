@@ -6,7 +6,7 @@
 Require Export Basics.Settings Basics.Notations.
 
 Local Set Polymorphic Inductive Cumulativity.
-
+Local Set Polymorphic Definitions Cumulativity.
 (** This command prevents Coq from automatically defining the eliminator functions for inductive types.  We will define them ourselves to match the naming scheme of the HoTT Book.  In principle we ought to make this [Global], but unfortunately the tactics [induction] and [elim] assume that the eliminators are named in Coq's way, e.g. [thing_rect], so making it global could cause unpleasant surprises for people defining new inductive types.  However, when you do define your own inductive types you are encouraged to also do [Local Unset Elimination Schemes] and then use [Scheme] to define [thing_ind], [thing_rec], and (for compatibility with [induction] and [elim]) [thing_rect], as we have done below for [paths], [Empty], [Unit], etc.  We are hoping that this will be fixed eventually; see https://github.com/coq/coq/issues/3745.  *)
 Local Unset Elimination Schemes.
 
@@ -271,13 +271,18 @@ Arguments idpath {A a} , [A] a.
 
 #[export] Hint Resolve idpath : core.
 
-Scheme paths_ind := Induction for paths Sort Type.
+Definition paths_ind@{a p} [A : Type@{a}] (a : A) (P : forall a0 : A, paths a a0 -> Type@{p}) (f : P a idpath) 
+  (y : A) (p : paths a y) : P y p :=
+  match p with
+  | idpath => f
+  end.
+
 Arguments paths_ind [A] a P f y p : rename.
 Scheme paths_rec := Minimality for paths Sort Type.
 Arguments paths_rec [A] a P f y p : rename.
 
 (* See comment above about the tactic [induction]. *)
-Definition paths_rect := paths_ind.
+Definition paths_rect@{a p} (A : Type@{a}) (a : A) P := paths_ind@{a p} a P.
 
 Register paths as core.identity.type.
 Register idpath as core.identity.refl.
@@ -559,7 +564,8 @@ Definition ap10_equiv {A B : Type} {f g : A <~> B} (h : f = g) : f == g
 
 Monomorphic Axiom Funext : Type0.
 Existing Class Funext.
-Axiom isequiv_apD10 : forall `{Funext} (A : Type) (P : A -> Type) f g, IsEquiv (@apD10 A P f g).
+#[universes(cumulative)] 
+Axiom isequiv_apD10@{-a -p} : forall `{Funext} (A : Type@{a}) (P : A -> Type@{p}) f g, IsEquiv (@apD10 A P f g).
 Existing Instance isequiv_apD10.
 
 Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A, P x)
@@ -622,7 +628,7 @@ Notation IsTrunc n A := (IsTrunc_internal A n).
 
 Scheme IsTrunc_internal_ind := Induction for IsTrunc_internal Sort Type.
 Scheme IsTrunc_internal_rec := Minimality for IsTrunc_internal Sort Type.
-Definition IsTrunc_internal_rect := IsTrunc_internal_ind.
+Definition IsTrunc_internal_rect P f f0 A t i := IsTrunc_internal_ind P f f0 A t i.
 
 Definition IsTrunc_unfolded (n : trunc_index) (A : Type)
   := match n with
@@ -633,7 +639,7 @@ Definition IsTrunc_unfolded (n : trunc_index) (A : Type)
 Definition istrunc_unfold (n : trunc_index) (A : Type)
   : IsTrunc n A -> IsTrunc_unfolded n A.
 Proof.
-  intros [center contr|k istrunc].
+  intros [center contr|k istrunc]. 
   - exact (center; contr).
   - exact istrunc.
 Defined.
@@ -654,9 +660,31 @@ Definition equiv_istrunc_unfold (n : trunc_index) (A : Type)
   := Build_Equiv _ _ _  (isequiv_istrunc_unfold n A).
 
 (** A version of [istrunc_unfold] for successors. *)
-Instance istrunc_paths (A : Type) n `{H : IsTrunc n.+1 A} (x y : A)
+Definition istrunc_paths (A : Type) n `{H : IsTrunc n.+1 A} (x y : A)
   : IsTrunc n (x = y)
   := istrunc_unfold n.+1 A H x y.
+
+From Ltac2 Require Import Ltac2.
+
+Ltac2 apply_istrunc_paths () := 
+  let goal := Control.goal () in
+  let (f, args) := Constr.decompose_app goal in
+  let ty := Array.get args 0 in
+  if Constr.is_evar ty then Control.backtrack_tactic_failure "does not apply on evars" else
+  match Constr.Unsafe.kind f with
+  | Constr.Unsafe.Ind _IsTrunc i => 
+    let lemma := 
+      match Constr.Unsafe.kind constr:(@istrunc_paths) with 
+      | Constr.Unsafe.Constant gr _ => gr 
+      | _ => Control.throw_invalid_argument "istrunc_paths is not a constant"
+      end 
+    in
+    let lemma := Constr.Unsafe.make (Constr.Unsafe.Constant lemma i) in
+    eapply ($lemma _ _ _ _ _)
+  | _ => Control.backtrack_tactic_failure "not match istrunc"
+  end.
+
+Hint Extern 0 (IsTrunc _ _) => Control.enter apply_istrunc_paths : typeclass_instances.
 
 Notation Contr A := (IsTrunc minus_two A).
 Notation IsHProp A := (IsTrunc minus_two.+1 A).
@@ -715,7 +743,7 @@ Register Empty as core.False.type.
 
 Scheme Empty_ind := Induction for Empty Sort Type.
 Scheme Empty_rec := Minimality for Empty Sort Type.
-Definition Empty_rect := Empty_ind.
+Definition Empty_rect@{u} P := Empty_ind@{u} P.
 
 Definition not (A : Type) := A -> Empty.
 Notation "~ x" := (not x) : type_scope.

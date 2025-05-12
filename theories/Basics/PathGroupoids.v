@@ -564,7 +564,7 @@ Proof.
   reflexivity.
 Defined.
 
-Definition concat_pA1_p {A : Type} {f : A -> A} (p : forall x, f x = x)
+Definition concat_pA1_p@{a} {A : Type@{a}} {f : A -> A} (p : forall x, f x = x)
   {x y : A} (q : x = y)
   {w : A} (r : w = f x)
   :
@@ -573,6 +573,7 @@ Proof.
   destruct q; simpl.
   induction (p x).
   reflexivity.
+  Show Proof.
 Defined.
 
 Definition concat_A1_pp {A : Type} {f : A -> A} (p : forall x, f x = x)

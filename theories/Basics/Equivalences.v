@@ -277,7 +277,7 @@ Definition equiv_pr1 {A : Type} (P : A -> Type) `{forall x, Contr (P x)}
 (** Equivalences between path spaces *)
 
 (** If [f] is an equivalence, then so is [ap f].  We are lazy and use [adjointify]. *)
-Instance isequiv_ap `{IsEquiv A B f} (x y : A)
+Instance isequiv_ap@{a b} {A : Type@{a}} {B : Type@{b}} `{IsEquiv A B f} (x y : A)
   : IsEquiv (@ap A B f x y) | 1000
   := isequiv_adjointify (ap f)
   (fun q => (eissect f x)^  @  ap f^-1 q  @  eissect f y)
@@ -306,9 +306,9 @@ Definition equiv_ap' `(f : A <~> B) (x y : A)
   : (x = y) <~> (f x = f y)
   := equiv_ap f x y.
 
-Definition equiv_inj `(f : A -> B) `{IsEquiv A B f} {x y : A}
+Definition equiv_inj {A : Type@{a}} {B : Type@{b}} `(f : A -> B) `{IsEquiv A B f} {x y : A}
   : (f x = f y) -> (x = y)
-  := (ap f)^-1.
+  := (ap@{a b} f)^-1.
 
 (** Assuming function extensionality, composing with an equivalence is itself an equivalence *)
 
@@ -375,10 +375,10 @@ Proof.
 Defined.
 
 (** The inverse of an equivalence is an equivalence. *)
-Instance isequiv_inverse {A B : Type} (f : A -> B) {feq : IsEquiv f}
+Instance isequiv_inverse {A : Type@{a}} {B : Type@{b}} (f : A -> B) {feq : IsEquiv f}
   : IsEquiv f^-1 | 10000.
 Proof.
-  nrefine (Build_IsEquiv B A f^-1 f (eissect f) (eisretr f) _).
+  nrefine (Build_IsEquiv@{b a} B A f^-1 f (eissect f) (eisretr f) _).
   intro b.
   apply (equiv_inj (ap f)).
   (* Both sides of the equation are paths of type [f (f^-1 (f (f^-1 b))) = f (f^-1 b)]. *)

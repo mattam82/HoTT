@@ -20,19 +20,18 @@ Section AssumeStuff.
 
   However, to enable performance speedups by controlling universes, we write out its universe parameters explicitly, making it less readable.  Moreover, since here we will eventually only be interested in those graphs that represent natural numbers, it does no harm to fix these universes at the outset throughout the entire development. *)
 
-  (** [s] : universe of the vertex and edge types
-      [u] : universe of the graph type, morally [s+1] *)
-  Universes s u.
+  (** [s] : universe of the vertex and edge types *)
+  Universes s.
 
-  Definition Graph@{} := @sig@{u u} Type@{s} (fun V => @sig@{u u} (V -> V -> Type@{s}) (fun E => forall x y, IsHProp (E x y))).
+  Definition Graph@{} := @sig@{s+1 s+1} Type@{s} (fun V => @sig (V -> V -> Type@{s}) (fun E => forall x y, IsHProp (E x y))).
 
   (** We also write out its constructors and fields explicitly to control their universes. *)
   Definition Build_Graph@{} (vert : Type@{s}) (edge : vert -> vert -> Type@{s})
              (ishprop_edge : forall x y, IsHProp (edge x y))
     : Graph
-    := @exist@{u u} Type@{s} (fun V => @sig@{u u} (V -> V -> Type@{s}) (fun E => forall x y, IsHProp (E x y)))
+    := @exist Type@{s} (fun V => @sig (V -> V -> Type@{s}) (fun E => forall x y, IsHProp (E x y)))
              vert
-             (@exist@{u u} (vert -> vert -> Type@{s}) (fun E => forall x y, IsHProp (E x y))
+             (@exist (vert -> vert -> Type@{s}) (fun E => forall x y, IsHProp (E x y))
                     edge ishprop_edge).
   Definition vert@{} : Graph -> Type@{s} := pr1.
   Definition edge@{} (A : Graph) : vert A -> vert A -> Type@{s} := pr1 (pr2 A).
@@ -68,12 +67,12 @@ Section AssumeStuff.
   "zero", and "adding a new top element" as "successor". *)
   Definition graph_zero@{} : Graph
     := Build_Graph Empty
-                   (fun x y => @Empty_rec@{u} Type@{s} x)
+                   (fun x y => @Empty_rec Type@{s} x)
                    (fun x y => Empty_rec x).
 
   Definition graph_succ@{} (A : Graph) : Graph.
   Proof.
-    srefine (Build_Graph (sum@{s s} (vert A) Unit) _ _).
+    snrefine (Build_Graph (sum@{s s} (vert A) Unit) _ _).
     - intros [x|x] [y|y].
       + exact (edge A x y).
       + exact Unit.
@@ -148,10 +147,10 @@ Section AssumeStuff.
     Qed.
 
     Definition graph_unsucc_equiv_vert@{} : vert A <~> vert B
-      := equiv_unfunctor_sum_l@{s s s s s s} f Ha Hb.
+      := equiv_unfunctor_sum_l@{s s s s} f Ha Hb.
 
     Definition graph_unsucc_equiv_edge@{} (x y : vert A)
-      : iff@{s s s} (edge A x y) (edge B (graph_unsucc_equiv_vert x) (graph_unsucc_equiv_vert y)).
+      : iff@{s s} (edge A x y) (edge B (graph_unsucc_equiv_vert x) (graph_unsucc_equiv_vert y)).
     Proof.
       pose (h := e (inl x) (inl y)).
       rewrite <- (unfunctor_sum_l_beta f Ha x) in h.
@@ -207,13 +206,11 @@ Section AssumeStuff.
     apply istrunc_forall.
   Qed.
 
-  (** [p] : universe of [N], morally [u+1] i.e. [s+2]. *)
-  Universe p.
-  Definition N@{} : Type@{p}
-    := @sig@{u p} Graph in_N@{u}.
+  Definition N@{} : Type@{s+2}
+    := @sig@{s+1 s+2} Graph in_N@{s+1}.
 
   Definition path_N@{} (n m : N) : n.1 = m.1 -> n = m
-    := path_sigma_hprop@{u p p} n m.
+    := path_sigma_hprop n m.
 
   Definition zero@{} : N.
   Proof.
@@ -239,7 +236,7 @@ Section AssumeStuff.
 
   (** A slightly more general version of the theorem that N is a set,
   which will be useful later. *)
-  Lemma ishprop_path_graph_in_N@{} (A B : Graph) (Arec : in_N@{u} A) : IsHProp (A = B).
+  Lemma ishprop_path_graph_in_N@{} (A B : Graph) (Arec : in_N@{s+1} A) : IsHProp (A = B).
   Proof.
     apply hprop_inhabited_contr; intros [].
     apply Arec; try exact _.
@@ -250,7 +247,7 @@ Section AssumeStuff.
       equiv_intro (equiv_path_graph graph_zero graph_zero) fe'.
       destruct fe' as [f' e'].
       apply equiv_ap; try exact _.
-      apply path_sigma_hprop, path_equiv@{s s s}, path_arrow.
+      apply path_sigma_hprop, path_equiv@{s s}, path_arrow.
       intros [].
     - try clear B;intros B BC.
       refine (contr_equiv (B = B) (graph_succ_path_equiv B B)).
@@ -301,7 +298,7 @@ Section AssumeStuff.
   Local Instance ishprop_graph_zero_or_succ@{} : forall n : Graph,
       IsHProp ((n = graph_zero) + { m : N & n = graph_succ m.1 }).
   Proof.
-    intros n. apply ishprop_sum@{u p p}.
+    intros n. apply ishprop_sum.
     - apply (@istrunc_equiv_istrunc _ _ (equiv_path_inverse _ _)),ishprop_path_graph_in_N.
       exact zero.2.
     - apply @ishprop_sigma_disjoint.
@@ -343,15 +340,15 @@ Section AssumeStuff.
         reflexivity.
   Qed.
 
-  Definition pred_in_N@{} (n : Graph) (snrec : in_N@{u} (graph_succ n))
-    : in_N@{u} n.
+  Definition pred_in_N@{} (n : Graph) (snrec : in_N@{s+1} (graph_succ n))
+    : in_N@{s+1} n.
   Proof.
     destruct (N_zero_or_succ (graph_succ n ; snrec)) as [H0|[m Hs]].
     - apply pr1_path in H0; cbn in H0.
       destruct (graph_zero_neq_succ H0^).
     - apply pr1_path in Hs.
       apply graph_unsucc_path in Hs.
-      apply (transport@{u p} in_N Hs^).
+      apply (transport@{s+1 s+2} in_N Hs^).
       exact m.2.
   Qed.
 
@@ -376,8 +373,8 @@ Section AssumeStuff.
   (** A first application *)
   Definition N_neq_succ@{} (n : N) : n <> succ n.
   Proof.
-    revert n; apply N_propind@{p}.
-    - intros n;exact istrunc_arrow@{p p p}.
+    revert n; apply N_propind@{s+2}.
+    - intros n;exact istrunc_arrow.
     - apply zero_neq_succ.
     - intros n H e.
       apply H.
@@ -412,7 +409,7 @@ Section AssumeStuff.
     apply equiv_path_graph.
     exists (sum_empty_r (vert A)).
     intros [x|[]] [y|[]].
-    apply iff_reflexive@{u s}.
+    apply iff_reflexive.
   Qed.
 
   Definition graph_add_zero_l@{} (A : Graph) : graph_add graph_zero A = A.
@@ -420,7 +417,7 @@ Section AssumeStuff.
     apply equiv_path_graph.
     exists (sum_empty_l (vert A)).
     intros [[]|x] [[]|y].
-    apply iff_reflexive@{u s}.
+    apply iff_reflexive.
   Qed.
 
   Definition graph_add_succ@{} (A B : Graph)
@@ -428,7 +425,7 @@ Section AssumeStuff.
   Proof.
     apply equiv_path_graph.
     exists (equiv_inverse (equiv_sum_assoc (vert A) (vert B) Unit)).
-    intros [x|[x|[]]] [y|[y|[]]];apply iff_reflexive@{u s}.
+    intros [x|[x|[]]] [y|[y|[]]];apply iff_reflexive.
   Qed.
 
   Definition graph_add_assoc@{} (A B C : Graph)
@@ -436,7 +433,7 @@ Section AssumeStuff.
   Proof.
     apply equiv_path_graph.
     exists (equiv_sum_assoc _ _ _).
-    intros [[x|x]|x] [[y|y]|y]; apply iff_reflexive@{u s}.
+    intros [[x|x]|x] [[y|y]|y]; apply iff_reflexive.
   Qed.
 
   Definition graph_one@{} : Graph
@@ -447,7 +444,7 @@ Section AssumeStuff.
   Proof.
     apply equiv_path_graph.
     exists equiv_idmap.
-    intros [x|[]] [y|[]]; apply iff_reflexive@{u s}.
+    intros [x|[]] [y|[]]; apply iff_reflexive@{s s+1}.
   Qed.
 
   Definition graph_succ_zero@{} : graph_succ graph_zero = graph_one.
@@ -545,7 +542,7 @@ Section AssumeStuff.
   Qed.
 
   (** Now we define inequality in terms of addition. *)
-  Definition N_le@{} (n m : N) : Type@{p}
+  Definition N_le@{} (n m : N) : Type@{s+2}
     := { k : N & k + n = m }.
 
   Notation "n <= m" := (N_le n m).
@@ -589,7 +586,7 @@ Section AssumeStuff.
     apply N_add_zero_l.
   Qed.
 
-  Definition N_lt@{} (n m : N) : Type@{p}
+  Definition N_lt@{} (n m : N) : Type@{s+2}
     := { k : N & (succ k) + n = m }.
 
   Notation "n < m" := (N_lt n m).
@@ -613,8 +610,8 @@ Section AssumeStuff.
 
   Definition N_lt_irref@{} (n : N) : ~(n < n).
   Proof.
-    revert n; apply N_propind@{p}.
-    - intros n;exact istrunc_arrow@{p p p}.
+    revert n; apply N_propind.
+    - intros n;exact istrunc_arrow.
     - apply N_lt_zero.
     - intros n H [k K].
       apply H; exists k.
@@ -641,8 +638,8 @@ Section AssumeStuff.
 
   Definition N_succ_nlt@{} (n : N) : ~(succ n < n).
   Proof.
-    revert n; apply N_propind@{p}.
-    - intros n;exact istrunc_arrow@{p p p}.
+    revert n; apply N_propind.
+    - intros n;exact istrunc_arrow.
     - apply N_lt_zero.
     - intros n H L.
       apply H; clear H.
@@ -692,7 +689,7 @@ Section AssumeStuff.
   Qed.
 
   Definition equiv_N_segment@{} (n : N)
-    : { m : N & m <= n } <~> (sum@{p p} {m : N & m < n} Unit).
+    : { m : N & m <= n } <~> (sum {m : N & m < n} Unit).
   Proof.
     srefine (equiv_adjointify _ _ _ _).
     - intros mH.
@@ -722,7 +719,7 @@ Section AssumeStuff.
   Defined.
 
   Definition equiv_N_segment_succ@{} (n : N)
-    : { m : N & m <= succ n } <~> @sum@{p p} {m : N & m <= n} Unit.
+    : { m : N & m <= succ n } <~> @sum {m : N & m <= n} Unit.
   Proof.
     refine (_ oE equiv_N_segment (succ n)).
     apply equiv_functor_sum_r.
@@ -815,12 +812,12 @@ Section AssumeStuff.
     Local Definition equiv_N_segment_succ_maps@{} (n : N)
       : Equiv@{nr nr} (prod@{nr x} ({ m : N & m <= n} -> X) X) ({ m : N & m <= succ n} -> X).
     Proof.
-      refine (_ oE @equiv_sum_ind@{x nr nr nr nr p p p}
-                _ {m:N&m<=n} Unit (fun _ => X) oE _).
+      refine (_ oE @equiv_sum_ind
+                _ {m:N & m <= n} Unit (fun _ => X) oE _).
       - apply equiv_precompose'.
         apply equiv_N_segment_succ.
       - apply equiv_functor_prod_l.
-        apply equiv_unit_rec@{x nr}.
+        apply equiv_unit_rec.
     Defined.
 
     Local Definition equiv_seg_succ@{} (n m : N) (H : m < succ n)
@@ -911,7 +908,7 @@ Section AssumeStuff.
     Defined.
     Local Definition partial_Nrec_succ@{}
       := Eval unfold partial_Nrec_succ0
-        in partial_Nrec_succ0@{nr nr}.
+        in partial_Nrec_succ0@{nr}.
 
     Local Instance contr_partial_Nrec@{} (n : N) : Contr (partial_Nrec n).
     Proof.
@@ -947,7 +944,7 @@ Section AssumeStuff.
     the types of partial attempts, which is contractible since each of
     them is.  *)
     Local Definition partials@{} := forall n, partial_Nrec n.
-    Local Instance contr_partials@{} : Contr partials := istrunc_forall@{p nr nr}.
+    Local Instance contr_partials@{} : Contr partials := istrunc_forall@{s+2 nr}.
 
     (** From a family of partial attempts, we get a totally defined
     recursive function. *)
@@ -975,7 +972,7 @@ Section AssumeStuff.
           transitivity ((partial_Nrec_restr n (pf (succ n))).1 (refl_seg n)).
           + refine (ap (pf (succ n)).1 _).
             apply path_sigma_hprop; reflexivity.
-          + apply ap10@{p x nr}.
+          + apply ap10.
             apply ap, path_contr.
       Defined.
 
@@ -1013,7 +1010,7 @@ Section AssumeStuff.
       : partial_Nrec_restr n (nrec_partials f (succ n)) = nrec_partials f n.
     Proof.
       change (?x = ?y) with ((x.1; x.2) = (y.1; y.2)).
-      srefine (path_sigma'@{nr nr nr} _ 1 _).
+      srefine (path_sigma' _ 1 _).
       abstract (rewrite transport_1;
       apply path_prod;
       [ cbn [partial_Nrec_restr nrec_partials fst pr2 pr1];

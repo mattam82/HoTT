@@ -780,9 +780,9 @@ Fixpoint list_filter@{u v|} {A : Type@{u}} (l : list A) (P : A -> Type@{v})
         else list_filter l P dec
     end.
 
-Definition inlist_filter@{u v k | u <= k, v <= k} {A : Type@{u}} (l : list A)
+Definition inlist_filter@{u v} {A : Type@{u}} (l : list A)
   (P : A -> Type@{v}) (dec : forall x, Decidable (P x)) (x : A)
-  : iff@{u k k} (InList x (list_filter l P dec)) (InList x l /\ P x).
+  : iff@{u max(u,v)} (InList x (list_filter l P dec)) (InList x l /\ P x).
 Proof.
   simple_list_induction l a l IHl.
   - simpl.
@@ -793,13 +793,13 @@ Proof.
     napply iff_compose.
     2: { apply iff_inverse.
          apply iff_equiv.
-         exact (sum_distrib_r@{k k k _ _ _ k k} _ _ _). }
+         exact (sum_distrib_r _ _ _). }
     destruct (dec a) as [p|p].
     + simpl.
       snapply iff_compose.
       1: exact (sum (a = x) (prod (InList@{u} x l) (P x))).
       1: split; apply functor_sum; only 1,3: exact idmap; apply IHl.
-      split; apply functor_sum@{k k k k}; only 2,4: exact idmap.
+      split; apply functor_sum; only 2,4: exact idmap.
       * intros [].
         exact (idpath, p).
       * exact fst.
@@ -807,8 +807,8 @@ Proof.
       1: exact IHl.
       apply iff_inverse.
       apply iff_equiv.
-      nrefine (equiv_compose'@{k k k} (sum_empty_l@{k} _) _).
-      snapply equiv_functor_sum'@{k k k k k k}.
+      nrefine (equiv_compose' (sum_empty_l _) _).
+      snapply equiv_functor_sum'.
       2: exact equiv_idmap.
       apply equiv_to_empty.
       by intros [[] r].
