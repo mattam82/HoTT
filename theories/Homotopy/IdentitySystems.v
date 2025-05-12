@@ -75,7 +75,7 @@ Definition contr_sigma_equiv_path {A : Type} {a0 : A}
   (R : A -> Type) (f : forall a, (a0 = a) <~> R a)
   : Contr (sig R).
 Proof.
-  rapply contr_equiv'.
+  eapply @contr_equiv'.
   1: exact (equiv_functor_sigma_id f).
   apply contr_basedpaths.
 Defined.

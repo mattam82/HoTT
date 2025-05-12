@@ -46,7 +46,8 @@ Notation "[ x , y , .. , z ]" := (x :: (y :: .. (z :: nil) ..)) : list_scope.
 (** Notice that the definition of a list looks very similar to the definition of [nat]. It is as if each [S] constructor from [nat] has an element of [A] attached to it. We can discard this extra element and get a list invariant that we call [length]. *)
 
 (** The length (number of elements) of a list. *)
-Fixpoint length {A : Type} (l : list A) :=
+Definition length {A : Type} : list A -> nat :=
+  fix length (l : list A) :=
   match l with
   | nil => O
   | _ :: l => S (length l)

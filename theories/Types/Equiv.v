@@ -137,16 +137,16 @@ Section AssumeFunext.
     - exact _.
     - intro p. exact (ap_compose (fun v => (equiv_fun v; equiv_isequiv v)) pr1 p)^.
   Defined.
-
   (** This implies that types of equivalences inherit truncation.  Note that we only state the theorem for [n.+1]-truncatedness, since it is not true for contractibility: if [B] is contractible but [A] is not, then [A <~> B] is not contractible because it is not inhabited.
 
    Don't confuse this lemma with [trunc_equiv], which says that if [A] is truncated and [A] is equivalent to [B], then [B] is truncated.  It would be nice to find a better pair of names for them. *)
-  #[export] Instance istrunc_equiv {n : trunc_index} {A B : Type} `{IsTrunc n.+1 B}
+
+  #[export] Instance istrunc_equiv@{u u0} {n : trunc_index} {A : Type@{u}} {B : Type@{u0}} `{IsTrunc n.+1 B}
     : IsTrunc n.+1 (A <~> B).
   Proof.
-    apply istrunc_S.
+    apply istrunc_S@{max(u,u0)}.
     intros e1 e2.
-    exact (istrunc_equiv_istrunc _ (equiv_path_equiv e1 e2)).
+    exact (istrunc_equiv_istrunc@{max(u,u0) max(u,u0)} _ (equiv_path_equiv e1 e2)).
   Defined.
 
   (** In the contractible case, we have to assume that *both* types are contractible to get a contractible type of equivalences. *)

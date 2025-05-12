@@ -222,11 +222,11 @@ Definition not_contrapositive `(f : B -> A)
   : not A -> not B
   := functor_arrow f idmap.
 
-Definition iff_not@{u v k | u <= k, v <= k}
+Definition iff_not@{u v}
   (A : Type@{u}) (B : Type@{v})
-  : A <-> B -> iff@{u v k} (~A) (~B).
+  : A <-> B -> iff@{u v} (~A) (~B).
 Proof.
-  intros e; split; apply not_contrapositive@{_ k}, e.
+  intros e; split; apply not_contrapositive@{_ _}, e.
 Defined.
 
 Definition ap_functor_arrow `(f : B -> A) `(g : C -> D)
@@ -242,9 +242,9 @@ Definition ap_functor_arrow `(f : B -> A) `(g : C -> D)
   : Contr (A -> B) | 100
   := contr_forall.
 
-#[export] Instance istrunc_arrow {A B : Type} `{IsTrunc n B}
+#[export] Instance istrunc_arrow@{a b} {A : Type@{a}} {B : Type@{b}} `{IsTrunc n B}
   : IsTrunc n (A -> B) | 100
-  := istrunc_forall.
+  := istrunc_forall@{a b}.
 
 (** ** Functions from a contractible type *)
 
