@@ -94,7 +94,9 @@ Section comma.
     simpl;
     rewrite ?CommaCategory.ap_a_path_object', ?CommaCategory.ap_b_path_object';
     try reflexivity.
-
+    Set Debug "backtrace".
+Set Debug "loop-checking".
+Set Debug "loop-checking-check-model".
   Lemma comma_category_projection_functor_identity_of x
   : comma_category_projection_functor_morphism_of (Category.Core.identity x)
     = 1.
@@ -102,7 +104,10 @@ Section comma.
     apply CommaCategory.path_morphism; simpl; [ | reflexivity ].
     path_functor.
     exists (path_forall _ _ (comma_category_induced_functor_object_of_identity _)).
+    Show Universes.
+
     comma_laws_t.
+
   Qed.
 
   Lemma comma_category_projection_functor_composition_of s d d' m m'

@@ -506,7 +506,7 @@ Definition equiv_induction_inv_comp {U : Type} (P : forall V, V <~> U -> Type)
 
 (** ** Based equivalence types *)
 
-#[export] Instance contr_basedequiv@{u +} {X : Type@{u}}
+#[export] Instance contr_basedequiv@{u} {X : Type@{u}}
   : Contr {Y : Type@{u} & X <~> Y}.
 Proof.
   apply (Build_Contr _ (X; equiv_idmap)).
@@ -514,7 +514,7 @@ Proof.
   exact (equiv_induction _ idpath).
 Defined.
 
-#[export] Instance contr_basedequiv'@{u +} {X : Type@{u}}
+#[export] Instance contr_basedequiv'@{u} {X : Type@{u}}
   : Contr {Y : Type@{u} & Y <~> X}.
 Proof.
   (* The next line is used so that Coq can figure out the type of (X; equiv_idmap). *)

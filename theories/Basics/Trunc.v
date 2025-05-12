@@ -333,24 +333,24 @@ Definition contr_istrunc_minus_two `{H : IsTrunc (-2) A} : Contr A
   := H.
 
 (** Truncation levels are cumulative. *)
-Instance istrunc_paths' {n : trunc_index} {A : Type} `{IsTrunc n A}
+Instance istrunc_paths'@{u} {n : trunc_index} {A : Type@{u}} `{IsTrunc n A}
   : forall x y : A, IsTrunc n (x = y) | 1000.
 Proof.
   generalize dependent A.
   simple_induction n n IH; simpl; intros A H x y.
-  - apply contr_paths_contr.
-  - apply istrunc_S.  rapply IH.
+  - apply contr_paths_contr@{u}.
+  - apply istrunc_S@{u}.  rapply IH.
 Defined.
 
-Instance istrunc_succ {n : trunc_index} {A : Type} `{IsTrunc n A}
+Instance istrunc_succ@{u} {n : trunc_index} {A : Type@{u}} `{IsTrunc n A}
   : IsTrunc n.+1 A | 1000.
 Proof.
-  apply istrunc_S.
-  exact istrunc_paths'.
+  apply istrunc_S@{u}.
+  exact istrunc_paths'@{u}.
 Defined.
 
 (** This could be an [Instance] (with very high priority, so it doesn't get applied trivially).  However, we haven't given typeclass search any hints allowing it to solve goals like [m <= n], so it would only ever be used trivially.  *)
-Definition istrunc_leq {m n} (Hmn : m <= n) `{IsTrunc m A}
+Definition istrunc_leq@{u} {m n} (Hmn : m <= n) {A : Type@{u}} `{IsTrunc m A}
   : IsTrunc n A.
 Proof.
   generalize dependent A; generalize dependent m.
@@ -358,9 +358,9 @@ Proof.
     intros [ | m'] Hmn A ? .
   - (* -2, -2 *) assumption.
   - (* S m', -2 *) destruct Hmn.
-  - (* -2, S n' *) apply @istrunc_succ, (IH (-2)); auto.
+  - (* -2, S n' *) apply @istrunc_succ@{u}, (IH (-2)); auto.
   - (* S m', S n' *)
-    apply istrunc_S.
+    apply istrunc_S@{u}.
     intros x y; apply (IH m'); auto with typeclass_instances.
 Defined.
 
@@ -382,16 +382,16 @@ Definition istrunc_hset {n} {A} `{IsHSet A}
 #[export] Hint Immediate istrunc_hset : typeclass_instances.
 
 (** Equivalence preserves truncation (this is, of course, trivial with univalence).  This is not an [Instance] because it causes infinite loops. *)
-Definition istrunc_isequiv_istrunc A {B} (f : A -> B)
+Definition istrunc_isequiv_istrunc@{a b} (A : Type@{a}) {B : Type@{b}} (f : A -> B)
   `{IsTrunc n A} `{IsEquiv A B f}
   : IsTrunc n B.
 Proof.
   generalize dependent B; generalize dependent A.
   simple_induction n n IH; simpl; intros A ? B f ?.
-  - exact (contr_equiv _ f).
-  - apply istrunc_S.
+  - exact (contr_equiv@{b a} _ f).
+  - apply istrunc_S@{b}.
     intros x y.
-    exact (IH _ _ _ (ap (f^-1))^-1 _).
+    exact (IH _ _ _ (ap@{b a} (f^-1))^-1 _).
 Defined.
 
 Definition istrunc_equiv_istrunc A {B} (f : A <~> B) `{IsTrunc n A}
@@ -434,8 +434,8 @@ Canonical Structure default_TruncType := fun n T P => (@Build_TruncType n T P).
 Definition smallntype@{i j} (n : trunc_index) (P : TruncType@{j} n) {smallP : IsSmall@{i j} P}
   : TruncType@{i} n.
 Proof.
-  napply (Build_TruncType n (smalltype P)).
-  apply (@istrunc_equiv_istrunc _ _ (equiv_smalltype P)^-1 n _).
+  napply (Build_TruncType n (smalltype@{i j} P)).
+  apply (@istrunc_equiv_istrunc@{i j} _ _ (equiv_smalltype@{i j} P)^-1 n _).
 Defined.
 
 Notation smallhprop := (smallntype (-1)).
@@ -515,16 +515,16 @@ Proof.
   intro f.  apply path_forall.  intro a.  apply contr.
 Defined.
 
-Instance istrunc_forall `{Funext} `{P : A -> Type} `{forall a, IsTrunc n (P a)}
+Instance istrunc_forall@{u u0} `{Funext} {A : Type@{u}} `{P : A -> Type@{u0}} `{forall a, IsTrunc n (P a)}
   : IsTrunc n (forall a, P a) | 100.
 Proof.
   generalize dependent P.
   simple_induction n n IH; simpl; intros P ?.
   (* case [n = -2], i.e. contractibility *)
-  - exact contr_forall.
+  - exact contr_forall@{u0 max(u,u0)}.
   (* case n = n'.+1 *)
-  - apply istrunc_S.
-    intros f g; exact (istrunc_isequiv_istrunc@{u1 u1} _ (apD10@{_ _ u1} ^-1)).
+  - apply istrunc_S@{max(u,u0)}.
+    intros f g; exact (istrunc_isequiv_istrunc@{max(u,u0) max(u,u0)} _ (apD10@{max(u,u0) max(u,u0)} ^-1)).
 Defined.
 
 (** Truncatedness is an hprop. *)
