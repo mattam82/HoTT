@@ -221,8 +221,8 @@ Section JoinConstruction.
   Definition jc_factor1@{} : X -> jc_image. Admitted.
   Definition jc_factor2@{} : jc_image -> Y. Admitted.
   Definition jc_factors@{} : jc_factor2 o jc_factor1 == f. Admitted.
-  #[export] Instance jc_factor1_issurj@{} : IsSurjection jc_factor1. Admitted.
-  #[export] Instance jc_factor2_isemb : IsEmbedding jc_factor2. Admitted.
+  #[export] Instance jc_factor1_issurj@{} : IsSurjection@{i} jc_factor1. Admitted.
+  #[export] Instance jc_factor2_isemb@{} : IsEmbedding@{i j} jc_factor2. Admitted.
 End JoinConstruction.
 
 (** We'd like to say that the universe of [O]-modal types is [O]-separated, i.e. belongs to [Sep O].  But since a given subuniverse like [Sep O] lives only on a single universe size, trying to say that in the naive way yields a universe inconsistency. *)

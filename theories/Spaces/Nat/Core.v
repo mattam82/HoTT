@@ -1249,7 +1249,7 @@ Defined.
 
 (** ** Further properties of subtraction *)
 
-Instance leq_sub_l n m : n - m <= n.
+Instance leq_sub_l@{} n m : n - m <= n.
 Proof.
   apply equiv_nat_sub_leq.
   rewrite nat_sub_comm_r.
@@ -1258,7 +1258,7 @@ Proof.
 Defined.
 
 (** Subtracting from a successor is the successor of subtracting from the original number, as long as the amount being subtracted is less than or equal to the original number. *)
-Definition nat_sub_succ_l n m : m <= n -> n.+1 - m = (n - m).+1.
+Definition nat_sub_succ_l@{} n m : m <= n -> n.+1 - m = (n - m).+1.
 Proof.
   intros H.
   induction m as [|m IHm] in n, H |- *.
@@ -1271,7 +1271,7 @@ Proof.
 Defined.
 
 (** Under certain conditions, subtracting a predecessor is the successor of the subtraction. *)
-Definition nat_sub_pred_r n m : 0 < m -> m < n -> n - nat_pred m = (n - m).+1.
+Definition nat_sub_pred_r@{} n m : 0 < m -> m < n -> n - nat_pred m = (n - m).+1.
 Proof.
   revert m; snapply gt_zero_ind.
   intros m H1.
@@ -1283,7 +1283,7 @@ Proof.
 Defined.
 
 (** Subtracting from a sum is the sum of subtracting from the second summand. *)
-Definition nat_sub_l_add_r m n k
+Definition nat_sub_l_add_r@{} m n k
   : k <= m -> (n + m) - k = n + (m - k).
 Proof.
   intros H; induction n as [|n IHn] in |- *.
@@ -1314,7 +1314,7 @@ Proof.
 Defined.
 
 (** Multiplication on the left distributes over subtraction. *)
-Definition nat_dist_sub_l n m k
+Definition nat_dist_sub_l@{} n m k
   : n * (m - k) = n * m - n * k.
 Proof.
   induction n as [|n IHn] in m, k |- *.
@@ -1343,7 +1343,7 @@ Defined.
 (** *** Monotonicity of subtraction *)
 
 (** Subtraction is monotone in the left argument. *)
-Definition nat_sub_monotone_l {n m} k : n <= m -> n - k <= m - k.
+Definition nat_sub_monotone_l@{} {n m} k : n <= m -> n - k <= m - k.
 Proof.
   intros H.
   destruct (leq_dichotomy k n) as [l|r].
@@ -1360,7 +1360,7 @@ Defined.
 Hint Immediate nat_sub_monotone_l : typeclass_instances.
 
 (** Subtraction is contravariantly monotone in the right argument. *)
-Definition nat_sub_monotone_r {n m} k : n <= m -> k - m <= k - n.
+Definition nat_sub_monotone_r@{} {n m} k : n <= m -> k - m <= k - n.
 Proof.
   intros H.
   induction k.
@@ -1376,7 +1376,7 @@ Hint Immediate nat_sub_monotone_r : typeclass_instances.
 (** *** Order-reflection lemmas *)
 
 (** Subtraction reflects [<=] in the left argument. *)
-Definition leq_reflects_sub_l {n m} k : k <= m -> n - k <= m - k -> n <= m.
+Definition leq_reflects_sub_l@{} {n m} k : k <= m -> n - k <= m - k -> n <= m.
 Proof.
   intros ineq1 ineq2.
   apply (nat_add_r_monotone k) in ineq2.
@@ -1386,7 +1386,7 @@ Proof.
 Defined.
 
 (** Subtraction reflects [<=] in the right argument contravariantly. *)
-Definition leq_reflects_sub_r {n m} k
+Definition leq_reflects_sub_r@{} {n m} k
   : m <= k -> n <= k -> k - n <= k - m -> m <= n.
 Proof.
   intros H1 H2 H3.

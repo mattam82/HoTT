@@ -100,7 +100,7 @@ Defined.
 
 Definition conn_pointed_type@{u} {n : trunc_index} {A : Type@{u}} (a0:A)
   `{IsConnMap@{u} n _ _ (unit_name a0)}
-  : IsConnected n.+1 A.
+  : IsConnected@{u} n.+1 A.
 Proof.
   apply isconnected_conn_map_to_unit.
   exact (OO_cancelR_conn_map (Tr n.+1) (Tr n) (unit_name a0) (const_tt A)).

@@ -346,9 +346,9 @@ Section Extensions.
     apply equiv_extendable_pathsplit.
   Defined.
 
-  #[export] Instance ishprop_ooextendable `{Funext}
-         {A B : Type} (C : B -> Type) (f : A -> B)
-  : IsHProp (ooExtendableAlong f C).
+  #[export] Instance ishprop_ooextendable@{i j k l} `{Funext}
+         {A : Type@{i}} {B : Type@{j}} (C : B -> Type@{k}) (f : A -> B)
+  : IsHProp (ooExtendableAlong@{i j k l} f C).
   Proof.
     exact (istrunc_equiv_istrunc _ (equiv_ooextendable_pathsplit C f)^-1).
   Defined.

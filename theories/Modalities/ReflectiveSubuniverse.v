@@ -32,7 +32,7 @@ Record Subuniverse@{i} :=
 }.
 
 (** Work around Coq bug that fields of records can't be typeclasses. *)
-Class In (O : Subuniverse) (T : Type) := in_internal : In_internal O T.
+Class In@{i} (O : Subuniverse@{i}) (T : Type@{i}) := in_internal : In_internal O T.
 
 (** Being in the subuniverse is a mere predicate (by hypothesis).  We include funext in the hypotheses of [hprop_inO] so that it doesn't have to be assumed in all definitions of (reflective) subuniverses, since in most examples it is required for this and this only.  Here we redefine it using the replaced [In]. *)
 Instance hprop_inO `{Funext} (O : Subuniverse) (T : Type)
@@ -69,11 +69,11 @@ Coercion TypeO_pr1 O (T : Type_ O) := @pr1 Type (In O) T.
 (** The second component of [TypeO] is unique.  *)
 Definition path_TypeO@{i j} {fs : Funext} O (T T' : Type_@{i j} O) (p : T.1 = T'.1)
   : T = T'
-  := path_sigma_hprop@{j i j} T T' p.
+  := path_sigma_hprop@{j i} T T' p.
 
 Definition equiv_path_TypeO@{i j} {fs : Funext} O (T T' : Type_@{i j} O)
   : (paths@{j} T.1 T'.1) <~> (T = T')
-  := equiv_path_sigma_hprop@{j i j} T T'.
+  := equiv_path_sigma_hprop@{j i} T T'.
 
 (** Types in [TypeO] are always in [O]. *)
 Instance inO_TypeO {O : Subuniverse} (A : Type_ O) : In O A
@@ -158,9 +158,9 @@ Class Reflects@{i} (O : Subuniverse@{i}) (T : Type@{i})
 Arguments extendable_to_O O {T _ _ Q Q_inO}.
 
 (** Here's a modified version that applies to types in possibly-smaller universes without collapsing those universes to [i]. *)
-Definition extendable_to_O'@{i j k | j <= i, k <= i} (O : Subuniverse@{i}) (T : Type@{j})
+Definition extendable_to_O'@{i j k| j <= i, k <= i} (O : Subuniverse@{i}) (T : Type@{j})
            `{Reflects O T} {Q : Type@{k}} {Q_inO : In O Q}
-  : ooExtendableAlong (to O T) (fun _ => Q).
+  : ooExtendableAlong@{j i k i} (to O T) (fun _ => Q).
 Proof.
   apply lift_ooextendablealong.
   rapply extendable_to_O.
@@ -310,16 +310,16 @@ Section Reflective_Subuniverse.
 
     (** In this section, we see that [O] is a functor. *)
 
-    Definition O_functor {A B : Type} (f : A -> B) : O A -> O B
+    Definition O_functor {A : Type@{u}} {B : Type@{v}} (f : A -> B) : O A -> O B
       := O_rec (to O B o f).
 
     (** Naturality of [to O] *)
-    Definition to_O_natural {A B : Type} (f : A -> B)
+    Definition to_O_natural {A : Type@{u}} {B : Type@{v}} (f : A -> B)
     : (O_functor f) o (to O A) == (to O B) o f
     := (O_rec_beta _).
 
     (** Functoriality on composition *)
-    Definition O_functor_compose {A B C : Type} (f : A -> B) (g : B -> C)
+    Definition O_functor_compose {A : Type@{u}} {B : Type@{v}} {C : Type@{w}} (f : A -> B) (g : B -> C)
     : (O_functor (g o f)) == (O_functor g) o (O_functor f).
     Proof.
       srapply O_indpaths; intros x.
@@ -610,13 +610,13 @@ Section Reflective_Subuniverse.
                (Z : Type@{z}) `{In@{i} O Z}
       : ooExtendableAlong@{a b z i} f (fun _ => Z).
     Proof.
-      refine (cancelL_ooextendable@{a b i z i i i i i} _ _ (to O B) _ _).
+      refine (cancelL_ooextendable _ _ (to O B) _ _).
       1:exact (extendable_to_O'@{i b z} O B).
       refine (ooextendable_homotopic _ (O_functor f o to O A) _ _).
       1:apply to_O_natural.
       refine (ooextendable_compose _ (to O A) (O_functor f) _ _).
       - srapply ooextendable_equiv.
-      - exact (extendable_to_O'@{i a z} O A).
+      - exact (extendable_to_O' O A).
     Defined.
 
     (** And now the funext version *)
@@ -759,14 +759,14 @@ Section Reflective_Subuniverse.
     (** ** The [Unit] type *)
     #[export] Instance inO_unit : In O Unit.
     Proof.
-      apply inO_to_O_retract@{Set} with (mu := fun x => tt).
+      apply inO_to_O_retract@{0} with (mu := fun x => tt).
       exact (@contr@{Set} Unit _).
     Defined.
 
     (** It follows that any contractible type is in [O]. *)
     #[export] Instance inO_contr {A : Type} `{Contr A} : In O A | 2.
     Proof.
-      exact (inO_equiv_inO@{Set _ _} Unit equiv_contr_unit^-1).
+      exact (inO_equiv_inO Unit equiv_contr_unit^-1).
     Defined.
 
     (** And that the reflection of a contractible type is still contractible. *)
@@ -990,13 +990,13 @@ Section Reflective_Subuniverse.
     (** ** Equivalences *)
 
     (** Naively it might seem that we need closure under Sigmas (hence a modality) to deduce closure under [Equiv], but in fact the above closure under fibers is sufficient.  This appears as part of the proof of Proposition 2.18 of CORS.  For later use, we try to reduce the number of universe parameters (but we don't completely control them all). *)
-    #[export] Instance inO_equiv `{Funext} (A : Type@{i}) (B : Type@{j})
+    #[export] Instance inO_equiv@{i j k} `{Funext} (A : Type@{i}) (B : Type@{j})
            `{In O A} `{In O B}
       : In O (A <~> B).
     Proof.
-      refine (inO_equiv_inO _ (issig_equiv@{i j k} A B)).
-      refine (inO_equiv_inO _ (equiv_functor_sigma equiv_idmap@{k}
-                                 (fun f => equiv_biinv_isequiv@{i j k} f))).
+      refine (inO_equiv_inO _ (issig_equiv@{i j} A B)).
+      refine (inO_equiv_inO _ (equiv_functor_sigma equiv_idmap
+                                 (fun f => equiv_biinv_isequiv@{i j} f))).
       transparent assert (c : (prod@{k k} (A->B) (prod@{k k} (B->A) (B->A)) -> prod@{k k} (A -> A) (B -> B))).
       { intros [f [g h]]; exact (h o f, f o g). }
       pose (U := hfiber@{k k} c (idmap, idmap)).
@@ -1027,7 +1027,7 @@ Section Reflective_Subuniverse.
     Definition inO_paths@{i} (S : Type@{i}) {S_inO : In O S} (x y : S)
     : In O (x=y).
     Proof.
-      simple refine (inO_to_O_retract@{i} _ _ _); intro u.
+      simple refine (inO_to_O_retract _ _ _); intro u.
       - assert (p : (fun _ : O (x=y) => x) == (fun _=> y)).
         { refine (O_indpaths _ _ _); simpl.
           intro v; exact v. }
@@ -1435,10 +1435,10 @@ Section ConnectedTypes.
   Defined.
 
   (** Here's another way of stating the universal property for mapping out of connected types into modal ones. *)
-  Definition extendable_const_isconnected_inO (n : nat)
-             (A : Type) `{IsConnected O A}
-             (C : Type) `{In O C}
-  : ExtendableAlong n (const_tt A) (fun _ => C).
+  Definition extendable_const_isconnected_inO@{a c i} (n : nat)
+             (A : Type@{a}) `{IsConnected O A}
+             (C : Type@{c}) `{In O C}
+  : ExtendableAlong@{a i c max(a,c,i)} n (const_tt@{a} A) (fun _ => C).
   Proof.
     generalize dependent C;
       simple_induction n n IHn; intros C ?;
@@ -1451,11 +1451,11 @@ Section ConnectedTypes.
       intros []; exact equiv_idmap.
   Defined.
 
-  Definition ooextendable_const_isconnected_inO
-             (A : Type@{i}) `{IsConnected@{i} O A}
+  Definition ooextendable_const_isconnected_inO@{i j k}
+             (A : Type@{i}) `{IsConnected O A}
              (C : Type@{j}) `{In O C}
-  : ooExtendableAlong (const_tt A) (fun _ => C)
-    := fun n => extendable_const_isconnected_inO n A C.
+  : ooExtendableAlong@{i k j max(i,j,k)} (const_tt@{i} A) (fun _ => C)
+    := fun n => extendable_const_isconnected_inO@{i j k} n A C.
 
   Definition isequiv_const_isconnected_inO `{Funext}
              {A : Type} `{IsConnected O A} (C : Type) `{In O C}
@@ -1616,7 +1616,7 @@ Section ConnectedMaps.
   Proof.
     intros ? b.
     exact (isconnected_equiv O (hfiber@{i i} f b)
-                             (equiv_hfiber_homotopic@{i i i} f g h b) _).
+                             (equiv_hfiber_homotopic@{i i} f g h b) _).
   Defined.
 
   (** The pullback of a connected map is connected *)

@@ -565,7 +565,7 @@ Definition ap10_equiv {A B : Type} {f g : A <~> B} (h : f = g) : f == g
 Monomorphic Axiom Funext : Type0.
 Existing Class Funext.
 #[universes(cumulative)] 
-Axiom isequiv_apD10@{-a -p} : forall `{Funext} (A : Type@{a}) (P : A -> Type@{p}) f g, IsEquiv (@apD10 A P f g).
+Axiom isequiv_apD10@{a p} : forall `{Funext} (A : Type@{a}) (P : A -> Type@{p}) f g, IsEquiv (@apD10 A P f g).
 Existing Instance isequiv_apD10.
 
 Definition path_forall `{Funext} {A : Type} {P : A -> Type} (f g : forall x : A, P x)

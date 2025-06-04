@@ -19,10 +19,10 @@ Section TruncType.
   Defined.
 
   Definition equiv_path_trunctype'@{a} {n : trunc_index} (A B : TruncType@{a} n)
-    : (A = B :> Type) <~> (A = B :> TruncType n).
+    : (A = B :> Type@{a}) <~> A = B.
   Proof.
     refine ((equiv_ap' issig_trunctype^-1 _ _)^-1 oE _).
-    exact (equiv_path_sigma_hprop (_;_) (_;_)).
+    exact (equiv_path_sigma_hprop (_;_) (_;_)).    
   Defined.
 
   #[export] Instance isequiv_ap_trunctype {n : trunc_index} (A B : n-Type)
@@ -37,7 +37,7 @@ Section TruncType.
     : (A <~> B) <~> (A = B :> TruncType@{a} n)
     := equiv_path_trunctype'@{a} _ _ oE equiv_path_universe _ _.
 
-  Definition path_trunctype@{a} {n : trunc_index} {A B : TruncType n}
+  Definition path_trunctype@{a} {n : trunc_index} {A B : TruncType@{a} n}
     : A <~> B -> (A = B :> TruncType n)
   := equiv_path_trunctype@{a} A B.
 

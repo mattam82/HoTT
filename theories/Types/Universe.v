@@ -490,13 +490,13 @@ Definition equiv_induction'_comp (P : forall U V, U <~> V -> Type)
   : equiv_induction' P didmap U U (equiv_idmap U) = didmap U
   := (equiv_ind_comp (P U U) _ 1).
 
-Theorem equiv_induction_inv {U : Type} (P : forall V, V <~> U -> Type)
-  : (P U (equiv_idmap U)) -> (forall V (w : V <~> U), P V w).
+Theorem equiv_induction_inv@{u v w?} {U : Type@{u}} (P : forall V : Type@{v}, V <~> U -> Type@{w})
+  : (P U (equiv_idmap U)) -> (forall (V : Type@{v}) (w : V <~> U), P V w).
 Proof.
   intros H0 V.
   apply (equiv_ind (equiv_path V U)).
   (* We manually apply [paths_ind_r] to reduce universe levels. *)
-  revert V; rapply paths_ind_r; exact H0.
+  revert V; rapply paths_ind_r@{_ w}; exact H0.
 Defined.
 
 Definition equiv_induction_inv_comp {U : Type} (P : forall V, V <~> U -> Type)
@@ -520,8 +520,8 @@ Proof.
   (* The next line is used so that Coq can figure out the type of (X; equiv_idmap). *)
   srapply Build_Contr.
   - exact (X; equiv_idmap).
-  - intros [Y f]; revert Y f.
-    exact (equiv_induction_inv _ idpath).
+  - intros [Y f]; revert Y f.  
+    exact (equiv_induction_inv@{_ _ u+1} _ idpath).
 Defined.
 
 (** Any two functions that act like transport along an equivalence, i.e. maps of the type [T : forall X Y, X <~> Y -> S X -> S Y] with a computation rule of type [Trefl : forall X, (T (equiv_idmap X) == idmap)], are homotopic. This can be useful when we want to transport along an equivalence, but [univalent_transport] does not have the computational properties that we want. *)

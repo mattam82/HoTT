@@ -111,8 +111,8 @@ Proof.
 Defined.
 
 (** We record these so that they can be used with the [induction] tactic. *)
-Definition Int_rect := Int_ind.
-Definition Int_rec := Int_ind.
+Definition Int_rect P := Int_ind P.
+Definition Int_rec P := Int_ind P.
 
 (** *** Decidable Equality *)
 

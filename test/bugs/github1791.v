@@ -10,12 +10,12 @@ Check transpose@{u1 u2 u3}.
 
 (** WildCat/Yoneda.v: *)
 
-Check opyon_equiv_0gpd@{u1 u2 u3 u4 u5 u6 u7 u8 u9}.
+Check opyon_equiv_0gpd@{u1 u2 u3 u4 u5}.
 
 (** Join/Core.v: *)
 
-Check equiv_join_sym@{u1 u2 u3 u4}.
+Check equiv_join_sym@{u1 u2}.
 
 (** Join/JoinAssoc.v: *)
 
-Check join_assoc@{u1 u2 u3 u4 u5 u6 u7 u8}.
+Check join_assoc@{u1 u2 u3}.

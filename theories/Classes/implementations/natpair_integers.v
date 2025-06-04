@@ -29,7 +29,7 @@ Arguments neg {N} _.
 
 Section contents.
 Universe UN UNalt.
-Context (N : Type@{UN}) `{Naturals@{UN UN UN UN UN UN UN UNalt} N}.
+Context (N : Type@{UN}) `{Naturals@{UN UN UNalt} N}.
 
 #[export] Instance T_set : IsHSet (T N).
 Proof.
@@ -278,7 +278,7 @@ path_via (naturals_to_semiring N B pa + naturals_to_semiring N B nb + 0);
 path_via (naturals_to_semiring N B pb + naturals_to_semiring N B na + 0);
 [rewrite plus_0_r|
 rewrite <-(plus_negate_r (naturals_to_semiring N B nb));ring_with_nat].
-rewrite <-2!preserves_plus. apply ap,E.
+rewrite <-2! preserves_plus. apply ap,E.
 Qed.
 
 End to_ring.
@@ -296,11 +296,11 @@ End PairT.
 Section contents.
 Universe UN UNalt.
 Context `{Funext} `{Univalence} (N : Type@{UN})
-  `{Naturals@{UN UN UN UN UN UN UN UNalt} N}.
+  `{Naturals@{UN UN UNalt} N}.
 
 (* Add Ring SR : (rings.stdlib_semiring_theory SR). *)
 Instance N_fullpartial : FullPartialOrder Ale Alt
-  := fullpseudo_fullpartial@{UN UN UN UN UN UN UN Ularge}.
+  := fullpseudo_fullpartial@{UN UN UN UN Ularge}.
 
 Definition Z@{} : Type@{UN} := @quotient _ PairT.equiv@{UN UNalt} _.
 
@@ -312,7 +312,7 @@ Definition Z_path {x y} : PairT.equiv x y -> Z_of_pair x = Z_of_pair y
   := related_classes_eq _.
 
 Definition related_path {x y} : Z_of_pair x = Z_of_pair y -> PairT.equiv x y
-  := classes_eq_related@{UN UN Ularge UN Ularge} _ _ _.
+  := classes_eq_related@{UN UN UN UN UN} _ _ _.
 
 Definition Z_rect@{i} (P : Z -> Type@{i}) {sP : forall x, IsHSet (P x)}
   (dclass : forall x : PairT.T N, P (' x))
@@ -342,15 +342,15 @@ apply (Z_ind _);intros y.
 apply dclass.
 Defined.
 
-Definition Z_ind3@{i j} (P : Z -> Z -> Z -> Type@{i})
+Definition Z_ind3@{i} (P : Z -> Z -> Z -> Type@{i})
   {sP : forall x y z : Z, IsHProp (P x y z)}
   (dclass : forall x y z : PairT.T N, P (' x) (' y) (' z))
   : forall x y z : Z, P x y z.
 Proof.
 apply (@Z_ind (fun x => forall y z, _));intros x.
-2:apply (Z_ind2@{i j} _);auto.
-apply (@istrunc_forall@{UN j j} _).
-intros. exact istrunc_forall@{UN i j}.
+2:apply (Z_ind2@{i} _);auto.
+apply (@istrunc_forall@{UN i} _).
+intros. exact istrunc_forall@{UN i}.
 Defined.
 
 Definition Z_rec@{i} {T : Type@{i} } {sT : IsHSet T}
@@ -363,12 +363,12 @@ Definition Z_rec_compute T sT dclass dequiv x
   : @Z_rec T sT dclass dequiv (' x) = dclass x
   := 1.
 
-Definition Z_rec2@{i j} {T:Type@{i} } {sT : IsHSet T}
+Definition Z_rec2@{i} {T:Type@{i}} {sT : IsHSet T}
   : forall (dclass : PairT.T N -> PairT.T N -> T)
   (dequiv : forall x1 x2, PairT.equiv x1 x2 -> forall y1 y2, PairT.equiv y1 y2 ->
     dclass x1 y1 = dclass x2 y2),
   Z -> Z -> T
-  := @quotient_rec2@{UN UN UN j i} _ _ _ _ _ (Build_HSet _).
+  := @quotient_rec2 _ _ _ _ _ (Build_HSet _).
 
 Definition Z_rec2_compute {T sT} dclass dequiv x y
   : @Z_rec2 T sT dclass dequiv (' x) (' y) = dclass x y
@@ -493,7 +493,7 @@ Qed.
 
 Definition Zle_HProp@{} : Z -> Z -> HProp@{UN}.
 Proof.
-apply (@Z_rec2@{Ularge Ularge} _ (@trunctype_istrunc@{Ularge} _ _)
+apply (@Z_rec2@{Ularge} _ (@trunctype_istrunc@{Ularge} _ _)
   (fun q r => Build_HProp (PairT.Tle q r))).
 intros. apply path_hprop. simpl.
 apply (PairT.le_respects _);trivial.
@@ -588,7 +588,7 @@ Instance Zmult_nonneg@{} : forall x y : Z, PropHolds (0 â‰¤ x) -> PropHolds (0 â
   := ltac:(first [exact Zmult_nonneg'@{Ularge Ularge Ularge}|
                   exact Zmult_nonneg']).
 
-#[export] Instance Z_order@{} : SemiRingOrder Zle.
+#[export] Instance Z_order@{} : SemiRingOrder@{UN UN UN UN UN} Zle.
 Proof. pose proof Z_ring; apply rings.from_ring_order; exact _. Qed.
 
 (* Make this computable? Would need to compute through Z_ind2. *)
@@ -602,7 +602,7 @@ Qed.
 
 Definition Zlt_HProp@{} : Z -> Z -> HProp@{UN}.
 Proof.
-apply (@Z_rec2@{Ularge Ularge} _ (@trunctype_istrunc@{Ularge} _ _)
+apply (@Z_rec2@{Ularge} _ (@trunctype_istrunc@{Ularge} _ _)
   (fun q r => Build_HProp (PairT.Tlt q r))).
 intros. apply path_hprop. simpl.
 apply (PairT.lt_respects _);trivial.
@@ -617,7 +617,7 @@ Lemma Zlt_def' : forall a b, ' a < ' b = PairT.Tlt a b.
 Proof. reflexivity. Qed.
 
 (* Coq pre 8.8 produces phantom universes, see GitHub Coq/Coq#1033. *)
-Definition Zlt_def@{i} := ltac:(first [exact Zlt_def'@{Uhuge i}|exact Zlt_def'@{i}]).
+Definition Zlt_def@{i} := ltac:(first [exact Zlt_def'@{Uhuge i}|exact Zlt_def'@{i}|exact Zlt_def']).
 
 Lemma Zlt_strict' : StrictOrder Zlt.
 Proof.
@@ -698,7 +698,7 @@ Local Existing Instance pseudo_order_apart.
 
 Definition Zapart_HProp@{} : Z -> Z -> HProp@{UN}.
 Proof.
-apply (@Z_rec2@{Ularge Ularge} _ _
+apply (@Z_rec2@{Ularge} _ _
   (fun q r => Build_HProp (PairT.Tapart q r))).
 intros. apply path_hprop. simpl.
 apply (PairT.apart_respects _);trivial.
@@ -711,7 +711,8 @@ Proof. reflexivity. Qed.
 
 (* Coq pre 8.8 produces phantom universes, see GitHub Coq/Coq#1033. *)
 Definition Zapart_def@{i} := ltac:(first [exact Zapart_def'@{Uhuge i}|
-                                          exact Zapart_def'@{i}]).
+                                          exact Zapart_def'@{i}|
+                                          exact Zapart_def'@{}]).
 
 #[export] Instance ishprop_Zapart : is_mere_relation _ Zapart.
 Proof. unfold Zapart;exact _. Qed.
@@ -842,7 +843,7 @@ Instance Zmult_strong_ext_l@{} : forall z : Z, StrongExtensionality (z *.)
                   exact Zmult_strong_ext_l'@{}]).
 
 Instance Z_full_pseudo_srorder@{}
-  : FullPseudoSemiRingOrder Zle Zlt.
+  : FullPseudoSemiRingOrder@{UN UN UN UN UN UN UN} Zle Zlt.
 Proof.
 pose proof Z_ring.
 first [apply from_full_pseudo_ring_order@{UN UN UN UN UN UN UN Ularge}|
@@ -862,7 +863,7 @@ eapply Z_rec.
 exact (PairT.to_ring_respects N).
 Defined.
 
-Lemma Z_to_ring_morphism' `{IsCRing B} : IsSemiRingPreserving (integers_to_ring Z B).
+Lemma Z_to_ring_morphism' {B : Type@{UNalt}} `{IsCRing@{UNalt} B} : IsSemiRingPreserving (integers_to_ring Z B).
 Proof.
 split;split;red.
 - change (@sg_op B _) with (@plus B _);
@@ -899,11 +900,12 @@ split;split;red.
   rewrite negate_0,plus_0_r;trivial.
 Qed.
 
-Instance Z_to_ring_morphism@{} `{IsCRing B} : IsSemiRingPreserving (integers_to_ring Z B)
-  := ltac:(first [exact Z_to_ring_morphism'@{Ularge}|
+Instance Z_to_ring_morphism@{} {B : Type@{UNalt}} `{IsCRing B} : IsSemiRingPreserving (integers_to_ring Z B)
+  := ltac:(first [exact Z_to_ring_morphism'@{}|
+                  exact Z_to_ring_morphism'@{Ularge}|
                   exact Z_to_ring_morphism'@{}]).
 
-Lemma Z_to_ring_unique@{} `{IsCRing B} (h : Z -> B) `{!IsSemiRingPreserving h}
+Lemma Z_to_ring_unique@{i} `{IsCRing@{i} B} (h : Z -> B) `{!IsSemiRingPreserving h}
   : forall x : Z, integers_to_ring Z B x = h x.
 Proof.
 pose proof Z_ring.
@@ -917,7 +919,7 @@ rewrite 2!(naturals_initial (h:=Compose h (cast N Z))).
 trivial.
 Qed.
 
-#[export] Instance Z_integers@{} : Integers Z.
+#[export] Instance Z_integers@{} : Integers@{UN UN UN UN UN UN UN UN UN UN} Z.
 Proof.
 split;try exact _.
 - exact Z_ring.
@@ -1045,10 +1047,8 @@ red. apply (Z_rect _ Z_abs_def).
 exact Z_abs_respects'.
 Qed.
 
-#[export] Instance Z_abs@{} : IntAbs@{UN UN UN UN UN
-  UN UN UN UN UN
-  UN UN UN UN UN
-  UN UN} Z N
+#[export] Instance Z_abs@{} : IntAbs@{UN UN UN UN UN UN UN UN UN UN UN
+  UN UN UN} Z N
   := Z_abs'.
 
 Notation n_to_z := (naturals_to_semiring N Z).

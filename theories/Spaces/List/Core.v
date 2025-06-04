@@ -110,7 +110,7 @@ Fixpoint reverse_acc {A : Type} (acc : list A) (l : list A) : list A :=
   | nil => acc
   | x :: l => reverse_acc (x :: acc) l
   end.
-
+  
 (** Reversing the order of a list. The list [ [a1; a2; ...; an] ] becomes [ [an; ...; a2; a1] ]. *)
 Definition reverse {A : Type} (l : list A) : list A := reverse_acc nil l.
 

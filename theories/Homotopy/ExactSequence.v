@@ -177,9 +177,9 @@ Defined.
 (** If the base is contractible, then [i] is [O]-connected. *)
 Definition isconnmap_O_isexact_base_contr (O : Modality@{u}) {F X Y : pType}
   `{Contr Y} (i : F ->* X) (f : X ->* Y)
-  `{IsExact@{_ _ u u u} O _ _ _ i f}
+  `{IsExact@{_ u u u} O _ _ _ i f}
   : IsConnMap O i
-  := conn_map_compose@{u _ u _} O (cxfib@{u u _ _} cx_isexact) pr1.
+  := conn_map_compose@{u _ u _} O (cxfib@{u u _} cx_isexact) pr1.
 
 (** Passage across homotopies preserves exactness. *)
 Definition isexact_homotopic_i n  {F X Y : pType}

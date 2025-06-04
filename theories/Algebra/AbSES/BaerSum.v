@@ -11,10 +11,10 @@ Local Open Scope mc_add_scope.
 (** * The Baer sum of two short exact sequences, lemmas and consequences. *)
 
 (** The Baer sum of two short exact sequences is obtained from the pointwise direct sum by pushing forward along the codiagonal and then pulling back along the diagonal. (Swapping the order of pushing forward and pulling back produces an isomorphic short exact sequence.) *)
+
 Definition abses_baer_sum `{Univalence} {B A : AbGroup@{u}} (E F : AbSES B A)
   : AbSES B A
   := abses_pullback ab_diagonal (abses_pushout ab_codiagonal (abses_direct_sum E F)).
-
 
 (** ** [AbSES'] is a bifunctor *)
 

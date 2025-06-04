@@ -17,23 +17,23 @@ Definition bitotal {A B : Type} (R : A -> B -> HProp) :=
 
 Module Export CumulativeHierarchy.
 
-Private Inductive V@{U' U | U < U'} : Type@{U'} :=
+Private Inductive V@{U} : Type@{U+1} :=
 | set {A : Type@{U}} (f : A -> V) : V.
 
-Axiom setext : forall {A B : Type} (R : A -> B -> HProp)
-  (bitot_R : bitotal R) (h : SPushout R -> V),
+Axiom setext@{a r U' U} : forall {A B : Type@{a}} (R : A -> B -> HProp@{r})
+  (bitot_R : bitotal R) (h : SPushout@{a a r max(a,r)} R -> V@{U}),
 set (h o (spushl R)) = set (h o (spushr R)).
 
 Axiom ishset_V : IsHSet V.
 Existing Instance ishset_V.
 
 (** The induction principle.  Annotating the universes here greatly reduces the number of universe variables later in the file.  For example, [function] below went from 279 to 3.  If [V_ind] needs to be generalized in the future, check [function] to make sure things haven't exploded again. *)
-Fixpoint V_ind@{U' U u | U < U'} (P : V@{U' U} -> Type@{u})
-  (H_0trunc : forall v : V@{U' U}, IsTrunc 0 (P v))
+Fixpoint V_ind@{U' U u | U < U'} (P : V@{U} -> Type@{u})
+  (H_0trunc : forall v : V@{U}, IsTrunc 0 (P v))
   (H_set : forall (A : Type@{U}) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
   (H_setext : forall (A B : Type@{U}) (R : A -> B -> HProp@{U}) (bitot_R : bitotal R)
     (h : SPushout R -> V) (H_h : forall x : SPushout R, P (h x)),
-    transport@{U' u} _ (setext R bitot_R h) (H_set A (h o spushl R) (H_h oD spushl R))
+    transport@{U' u} _ (setext@{U U U' U} R bitot_R h) (H_set A (h o spushl R) (H_h oD spushl R))
       = H_set B (h o spushr R) (H_h oD spushr R) )
   (v : V)
 : P v
@@ -251,7 +251,7 @@ Proof.
 Defined.
 
 (* Then we define [bisimulation : V -> (V -> HProp)] by induction again *)
-Definition bisimulation : V@{U' U} -> V@{U' U} -> HProp@{U}.
+Definition bisimulation : V@{U} -> V@{U} -> HProp@{U}.
 Proof.
   refine (V_rec' (V -> HProp) _ bisim_aux _).
   intros A B f g eq_img H_f H_g H_img.
@@ -476,7 +476,7 @@ Defined.
 Definition V_empty : V := set (Empty_ind (fun _ => V)).
 
 (** The singleton {u} *)
-Definition V_singleton (u : V) : V@{U' U} := set (Unit_ind u).
+Definition V_singleton (u : V) : V@{U} := set (Unit_ind u).
 
 #[export] Instance isequiv_ap_V_singleton {u v : V}
 : IsEquiv (@ap _ _ V_singleton u v).
@@ -487,9 +487,9 @@ Proof.
 Defined.
 
 (** The pair {u,v} *)
-Definition V_pair (u : V) (v : V) : V@{U' U} := set (fun b : Bool => if b then u else v).
+Definition V_pair (u : V) (v : V) : V@{U} := set (fun b : Bool => if b then u else v).
 
-Lemma path_pair {u v u' v' : V@{U' U}} : (u = u') * (v = v') -> V_pair u v = V_pair u' v'.
+Lemma path_pair {u v u' v' : V@{U}} : (u = u') * (v = v') -> V_pair u v = V_pair u' v'.
 Proof.
   intros (H1, H2). apply setext'. split.
   + apply Bool_ind.

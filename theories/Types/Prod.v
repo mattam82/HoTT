@@ -372,7 +372,7 @@ Definition equiv_prod_coind `(A : X -> Type) (B : X -> Type)
 
 (** ** Products preserve truncation *)
 
-Instance istrunc_prod `{IsTrunc n A} `{IsTrunc n B} : IsTrunc n (A * B) | 100.
+Instance istrunc_prod@{a b} `{IsTrunc@{a} n A} `{IsTrunc@{b} n B} : IsTrunc n (A * B) | 100.
 Proof.
   generalize dependent B; generalize dependent A.
   simple_induction n n IH; simpl; (intros A ? B ?).

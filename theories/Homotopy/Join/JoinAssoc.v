@@ -78,10 +78,10 @@ Definition trijoinrecdata_fun_twist (A B C : Type)
       (natequiv_compose (trijoinrecdata_twist_natequiv A B C) (trijoin_rec_inv_natequiv A B C)).
 
 (** The Yoneda lemma for 0-groupoid valued functors therefore gives us an equivalence between the representing objects.  We mark this with a prime, since we'll use a homotopic map with a slightly simpler definition. *)
-Definition equiv_trijoin_twist' (A B C : Type)
+Definition equiv_trijoin_twist'@{a b c} (A : Type@{a}) (B : Type@{b}) (C : Type@{c})
   : TriJoin A B C <~> TriJoin B A C.
 Proof.
-  tapply (opyon_equiv_0gpd (A:=Type)).
+  tapply (opyon_equiv_0gpd (A:=Type@{max(a,b,c)})).
   apply trijoinrecdata_fun_twist.
 Defined.
 
@@ -154,7 +154,7 @@ Definition trijoin_id_sym A B C : TriJoin A B C <~> TriJoin A C B
 
 Arguments trijoin_id_sym : simpl never.
 
-Definition join_assoc A B C : Join A (Join B C) <~> Join (Join A B) C.
+Definition join_assoc@{a b c} (A : Type@{a}) (B : Type@{b}) (C : Type@{c}) : Join A (Join B C) <~> Join (Join A B) C.
 Proof.
   refine (_ oE trijoin_id_sym _ _ _).
   refine (_ oE equiv_trijoin_twist _ _ _).

@@ -18,13 +18,13 @@ Local Open Scope path_scope.
 Section Join.
 
   Definition Join (A : Type@{i}) (B : Type@{j})
-    := Pushout@{k i j k} (@fst A B) (@snd A B).
+    := Pushout@{max(i,j) i j max(i,j)} (@fst A B) (@snd A B).
 
-  Definition joinl {A B} : A -> Join A B
-    := fun a => @pushl (A*B) A B fst snd a.
+  Definition joinl@{i j} {A : Type@{i}} {B : Type@{j}} : A -> Join@{i j} A B
+    := fun a => @pushl@{max(i,j) i j max(i,j)} (A*B) A B fst snd a.
 
-  Definition joinr {A B} : B -> Join A B
-    := fun b => @pushr (A*B) A B fst snd b.
+  Definition joinr@{i j} {A : Type@{i}} {B : Type@{j}} : B -> Join A B
+    := fun b => @pushr@{max(i,j) i j max(i,j)} (A*B) A B fst snd b.
 
   Definition jglue {A B} a b : joinl a = joinr b
     := @pglue (A*B) A B fst snd (a , b).
@@ -777,7 +777,7 @@ Section JoinSym.
   Defined.
 
   (** Therefore the obvious definition is also an equivalence, and the inverse function can also be chosen to be [join_sym]. *)
-  Definition equiv_join_sym (A B : Type) : Join A B <~> Join B A
+  Definition equiv_join_sym@{a b} (A : Type@{a}) (B : Type@{b}) : Join@{a b} A B <~> Join@{b a} B A
     := equiv_homotopic_inverse (equiv_join_sym' A B)
                               (join_sym_homotopic A B)
                               (join_sym_homotopic B A).

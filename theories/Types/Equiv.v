@@ -111,7 +111,7 @@ Section AssumeFunext.
   Defined.
 
   (** It also follows that paths of equivalences are equivalent to paths of functions. *)
-  Lemma equiv_path_equiv {A B : Type} (e1 e2 : A <~> B)
+  Lemma equiv_path_equiv@{a b} {A : Type@{a}} {B : Type@{b}} (e1 e2 : A <~> B)
     : (e1 = e2 :> (A -> B)) <~> (e1 = e2 :> (A <~> B)).
   Proof.
     equiv_via ((issig_equiv A B) ^-1 e1 = (issig_equiv A B) ^-1 e2).
@@ -146,11 +146,16 @@ Section AssumeFunext.
   Proof.
     apply istrunc_S@{max(u,u0)}.
     intros e1 e2.
-    exact (istrunc_equiv_istrunc@{max(u,u0) max(u,u0)} _ (equiv_path_equiv e1 e2)).
+    exact (@istrunc_equiv_istrunc@{max(u,u0) max(u,u0)} _ _
+      (equiv_path_equiv@{u u0} e1 e2) _
+      (@istrunc_paths@{max(u,u0)} (forall _ : A, B) n
+         (@istrunc_arrow@{u u0} H A B
+            (trunc_S n) IsTrunc0)
+         (@equiv_fun@{u u0} A B e1) (@equiv_fun@{u u0} A B e2))).
   Defined.
 
   (** In the contractible case, we have to assume that *both* types are contractible to get a contractible type of equivalences. *)
-  #[export] Instance contr_equiv_contr_contr {A B : Type} `{Contr A} `{Contr B}
+  #[export] Instance contr_equiv_contr_contr@{u u0} {A : Type@{u}} {B : Type@{u0}} `{Contr A} `{Contr B}
     : Contr (A <~> B).
   Proof.
     apply (Build_Contr _ equiv_contr_contr).

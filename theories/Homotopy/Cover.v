@@ -17,7 +17,7 @@ Definition O_cover@{u} `{O : ReflectiveSubuniverse@{u}}
 (* If [x] is an actual point of [X], then the connected cover is pointed. *)
 Definition O_pcover@{u} (O : ReflectiveSubuniverse@{u})
   (X : Type@{u}) (x : X) : pType@{u}
-  := pfiber@{u u u} (pto O [X,x]).
+  := pfiber@{u u} (pto O [X,x]).
 
 (** Covers commute with products *)
 Definition O_pcover_prod `{O : ReflectiveSubuniverse} {X Y : pType@{u}}

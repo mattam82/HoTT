@@ -166,7 +166,7 @@ Definition istrunc_pforall `{Univalence} {m n : trunc_index}
   (Y : pFam@{u v} X) {istY : forall x, IsTrunc (n +2+ m) (Y x)}
   : IsTrunc@{w} n (pForall X Y).
 Proof.
-  napply (istrunc_equiv_istrunc _ (equiv_extension_along_pforall@{v w u} Y)).
+  napply (istrunc_equiv_istrunc _ (equiv_extension_along_pforall Y)).
   rapply (istrunc_extension_along_conn (n:=m) _ Y (HP:=istY)).
 Defined.
 

@@ -36,7 +36,7 @@ Proof.
 Qed.
 
 Lemma path_sum_bool X :
-  X + X = Bool * X.
+  X + X = prod@{i _} Bool X.
 Proof.
   apply path_universe_uncurried. srapply equiv_adjointify.
   - exact (fun x => match x with inl x => (true, x) | inr x => (false, x) end).

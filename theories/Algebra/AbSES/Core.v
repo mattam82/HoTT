@@ -19,7 +19,7 @@ Declare Scope abses_scope.
 Local Open Scope abses_scope.
 
 (** The type of short exact sequences [A -> E -> B] of abelian groups. We decorate it with (') to reserve the undecorated name for the structured version. *)
-Record AbSES' {B A : AbGroup@{u}} := Build_AbSES {
+Record AbSES'@{u} {B A : AbGroup@{u}} := Build_AbSES {
     middle :  AbGroup@{u};
     inclusion : A $-> middle;
     projection : middle $-> B;
@@ -58,7 +58,7 @@ Definition iscomplex_abses {A B : AbGroup} (E : AbSES' B A)
   := cx_isexact.
 
 (** [AbSES' B A] is pointed by the split sequence [A -> A+B -> B]. *)
-Instance ispointed_abses {B A : AbGroup@{u}}
+Instance ispointed_abses@{u} {B A : AbGroup@{u}}
   : IsPointed (AbSES' B A).
 Proof.
   rapply (Build_AbSES (ab_biprod A B) ab_biprod_inl ab_biprod_pr2).
@@ -73,12 +73,12 @@ Proof.
 Defined.
 
 (** The pointed type of short exact sequences. *)
-Definition AbSES (B A : AbGroup@{u}) : pType
+Definition AbSES@{u} (B A : AbGroup@{u}) : pType
   := [AbSES' B A, _].
 
 (** ** Paths in [AbSES B A] *)
 
-Definition abses_path_data_iso
+Definition abses_path_data_iso@{u}
   {B A : AbGroup@{u}} (E F : AbSES B A)
   := {phi : GroupIsomorphism E F
             & (phi $o inclusion _ == inclusion _)
@@ -102,7 +102,7 @@ Proof.
 Defined.
 
 (** Paths in [AbSES] correspond to isomorphisms between the [middle]s respecting [inclusion] and [projection]. Below we prove the stronger statement [equiv_path_abses], which uses this result. *)
-Proposition equiv_path_abses_iso `{Univalence}
+Proposition equiv_path_abses_iso@{u} `{Univalence}
   {B A : AbGroup@{u}} {E F : AbSES' B A}
   : abses_path_data_iso E F <~> E = F.
 Proof.
@@ -145,9 +145,9 @@ Definition path_abses_iso `{Univalence} {B A : AbGroup@{u}}
 (** Given [p] and [q], the map [phi] just above is automatically an isomorphism. Showing this requires the "short five lemma." *)
 
 (** A special case of the "short 5-lemma" where the two outer maps are (definitionally) identities. *)
-Lemma short_five_lemma {B A : AbGroup@{u}}
+Lemma short_five_lemma@{u} {B A : AbGroup@{u}}
   {E F : AbSES B A} (phi : Hom (A:=AbGroup) E F)
-  (p0 : phi $o inclusion E == inclusion F) (p1 : projection E == projection F $o phi)
+  (p0 : phi $o inclusion E == inclusion F) (p1 : projection E == projection@{u} F $o phi)
   : IsEquiv phi.
 Proof.
   apply isequiv_surj_emb.
@@ -657,9 +657,9 @@ Defined.
 (** ** Constructions of short exact sequences *)
 
 (** Any inclusion [i : A $-> E] determines a short exact sequence by quotienting. *)
-Definition abses_from_inclusion `{Univalence}
+Definition abses_from_inclusion@{u} `{Univalence}
   {A E : AbGroup@{u}} (i : A $-> E) `{IsEmbedding i}
-  : AbSES (QuotientAbGroup E (grp_image_embedding i)) A.
+  : AbSES (QuotientAbGroup@{u u u} E (grp_image_embedding i)) A.
 Proof.
   srapply (Build_AbSES E i).
   1: exact grp_quotient_map.

@@ -275,7 +275,7 @@ induction k.
 Qed.
 
 Lemma le_exists : forall n m : nat,
-  iff@{N N N} (n <= m) (sig@{N N} (fun k => m =N= k + n)).
+  iff@{N N} (n <= m) (sig@{N N} (fun k => m =N= k + n)).
 Proof.
 intros n m;split.
 - intros E;induction E as [|m E IH].
@@ -291,7 +291,7 @@ Proof.
 induction a;constructor;auto.
 Qed.
 
-Lemma le_S_S : forall a b : nat, iff@{N N N} (a <= b) (S a <= S b).
+Lemma le_S_S : forall a b : nat, iff@{N N} (a <= b) (S a <= S b).
 Proof.
 intros. etransitivity;[apply le_exists|].
 etransitivity;[|apply symmetry,le_exists].
@@ -366,7 +366,7 @@ intros m n;apply Trunc.hprop_allpath.
 generalize (idpath (S n) : S n =N= S n).
 generalize n at 2 3 4 5.
 change (forall n0 : nat,
-S n =N= S n0 -> forall le_mn1 le_mn2 : m <= n0, le_mn1 = le_mn2).
+S n =N= S n0 -> forall le_mn1 le_mn2 : le m n0, le_mn1 = le_mn2).
 induction (S n) as [|n0 IHn0].
 - intros ? E;destruct (S_neq_0 _ (natpaths_symm _ _ E)).
 - clear n; intros n H.
@@ -431,7 +431,7 @@ split.
   reflexivity.
 Qed.
 
-#[export] Instance nat_trichotomy : Trichotomy@{N N i} (lt:Lt nat).
+#[export] Instance nat_trichotomy : Trichotomy@{N N} (lt:Lt nat).
 Proof.
 hnf. fold natpaths.
 intros a b. destruct (le_lt_dec a b) as [[|]|E];auto.
@@ -453,7 +453,7 @@ Proof.
   rapply decidable_sum@{N N N}; apply Nat.Core.decidable_lt.
 Defined.
 
-#[export] Instance nat_trivial_apart : TrivialApart nat.
+#[export] Instance nat_trivial_apart : TrivialApart@{N N} nat.
 Proof.
 split.
 - exact _.
@@ -521,7 +521,7 @@ destruct (le_lt_dec c a) as [E2|E2].
 - left;trivial.
 Defined.
 
-Lemma nat_full' : FullPseudoSemiRingOrder nat_le nat_lt.
+Lemma nat_full'@{} : FullPseudoSemiRingOrder@{N N N N N N N} nat_le nat_lt.
 Proof.
 split;[exact _|split|].
 - split;try exact _.
@@ -565,7 +565,8 @@ split;[exact _|split|].
 Qed.
 
 (* Coq pre 8.8 produces phantom universes, see GitHub Coq/Coq#1033. *)
-Definition nat_full@{} := ltac:(first[exact nat_full'@{Ularge Ularge}|
+Definition nat_full@{} := ltac:(first[exact nat_full'@{N N N}|
+                                      exact nat_full'@{Ularge Ularge}|
                                       exact nat_full'@{Ularge Ularge N}|
                                       exact nat_full'@{}]).
 Local Existing Instance nat_full.
@@ -595,7 +596,7 @@ Qed.
 
 #[export] Instance S_strict_embedding : StrictOrderEmbedding S.
 Proof.
-split;exact _.
+split; exact _.
 Qed.
 
 #[export] Instance nat_naturals_to_semiring : NaturalsToSemiRing@{N i} nat :=
@@ -661,9 +662,9 @@ Section for_another_semiring.
   Qed.
 End for_another_semiring.
 
-Lemma nat_naturals : Naturals@{N N N N N N N i} nat.
+Lemma nat_naturals : Naturals@{N N i} nat.
 Proof.
-split;try exact _.
+split; try exact _.
 intros;apply toR_unique, _.
 Qed.
 #[export] Existing Instance nat_naturals.

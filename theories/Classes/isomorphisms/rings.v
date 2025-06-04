@@ -27,9 +27,9 @@ Arguments SR_one !_ /.
 
 
 Section contents.
-Universe U V.
+Universe U.
 Context `{Funext} `{Univalence}.
-Context (A B : Operations@{U V}).
+Context (A B : Operations@{U}).
 
 Context (f : A -> B) `{!IsEquiv f} `{!IsSemiRingPreserving f}.
 
@@ -91,9 +91,9 @@ Arguments R_one !_ /.
 Arguments R_negate !_ / _.
 
 Section contents.
-Universe U V.
+Universe U.
 Context `{Funext} `{Univalence}.
-Context (A B : Operations@{U V}).
+Context (A B : Operations@{U}).
 
 (* NB: we need to know they're rings for preserves_negate *)
 Context (f : A -> B) `{!IsEquiv f} `{!IsCRing A} `{!IsCRing B} `{!IsSemiRingPreserving f}.

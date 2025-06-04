@@ -60,9 +60,8 @@ Section path_category.
                                  (@compose C))
            = @compose D }}.
 
-  (** ** Classify sufficient conditions to prove precategories equal *)
-  Lemma path_precategory_uncurried__identity_helper `{Funext} (C D : PreCategory)
-        (Heq : path_precategory'_T C D)
+  Lemma path_precategory_uncurried__identity_helper `{Funext} (C : PreCategory@{i j}) (D : PreCategory@{i j})
+    (Heq : path_precategory'_T C D)
   : transport _
               Heq.2.1
               (transportD (fun obj => obj -> obj -> Type)

@@ -757,8 +757,8 @@ For convenience, we instead split the idempotent on splittings of a fixed map [f
 Section CoherentIdempotents.
   Context {ua : Univalence}.
 
-  Class IsIdempotent {X : Type} (f : X -> X)
-    := is_coherent_idem : split_idem (retract_idem (splitting_retractof_isqidem f)).
+  Class IsIdempotent@{i j} {X : Type@{i}} (f : X -> X)
+    := is_coherent_idem : split_idem (retract_idem@{i j} (splitting_retractof_isqidem f)).
 
   Definition Build_IsIdempotent {X : Type} (f : X -> X)
   : Splitting f -> IsIdempotent f
@@ -791,10 +791,10 @@ Section CoherentIdempotents.
 
   (** The above definitions depend on [Univalence].  Technically this is the case by their construction, since they are a splitting of a map that we only know to be idempotent in the presence of univalence.  This map could be defined, and hence "split", without univalence; but also only with univalence do we know that they have the right homotopy type.  Thus univalence is used in two places: concluding (meta-theoretically) from HTT 4.4.5.14 that [RetractOf X] has the right homotopy type, and showing (in the next lemma) that it is equivalent to [Idempotent X].  In the absence of univalence, we don't currently have *any* provably-correct definition of the type of coherent idempotents; it ought to involve an infinite tower of coherences as defined in HTT section 4.4.5.   However, there may be some Yoneda-like meta-theoretic argument which would imply that the above-defined types do have the correct homotopy type without univalence (though almost certainly not without funext). *)
 
-  Definition equiv_idempotent_retractof (X : Type)
-  : Idempotent X <~> RetractOf X.
+  Definition equiv_idempotent_retractof@{i j} (X : Type@{i})
+  : Equiv@{max(i,j+1) max(i,j+1)} (Idempotent@{i} X) (RetractOf@{i j} X).
   Proof.
-    transitivity ({ f : X -> X & Splitting f }).
+    transitivity ({ f : X -> X & Splitting@{i j} f }).
     - unfold Idempotent.
       refine (equiv_functor_sigma' (equiv_idmap _) _); intros f; simpl.
       refine (equiv_split_idem_retract (splitting_retractof_isqidem f)).
@@ -806,10 +806,10 @@ Section CoherentIdempotents.
 
   (** For instance, here is the standard coherent idempotent structure on the identity map. *)
   #[export] Instance isidem_idmap (X : Type@{i})
-  : @IsIdempotent@{i i j} X idmap
+  : @IsIdempotent@{i i+1} X idmap
     := Build_IsIdempotent idmap (splitting_idmap X).
 
-  Definition idem_idmap (X : Type@{i}) : Idempotent@{i i j} X
+  Definition idem_idmap (X : Type@{i}) : Idempotent@{i} X
   := (idmap ; isidem_idmap X).
 End CoherentIdempotents.
 

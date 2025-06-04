@@ -8,12 +8,12 @@ Proof. intros []. Defined.
 
 Instance Unit_lt : Lt@{Set Set} Unit := fun _ _ => Empty.
 
-Instance empty_tricho : Trichotomy@{Set Set Set} (_:Lt Empty).
+Instance empty_tricho : Trichotomy@{Set Set} (_:Lt Empty).
 Proof.
 intros [].
 Qed.
 
-Instance unit_tricho : Trichotomy@{Set Set Set} (_:Lt Unit).
+Instance unit_tricho : Trichotomy@{Set Set} (_:Lt Unit).
 Proof.
 intros [] [];auto.
 Defined.
@@ -31,8 +31,8 @@ Context `{Alt : Lt@{Set Set} A} `{Blt : Lt@{Set Set} B}.
   | inr _, inl _ => Empty
   end.
 
-#[export] Instance sum_tricho `{!Trichotomy@{Set Set Set} Alt} `{!Trichotomy@{Set Set Set} Blt}
-  : Trichotomy@{Set Set Set} sum_lt.
+#[export] Instance sum_tricho `{!Trichotomy@{Set Set} Alt} `{!Trichotomy@{Set Set} Blt}
+  : Trichotomy@{Set Set} sum_lt.
 Proof.
 hnf. intros [a1|b1] [a2|b2];simpl.
 - destruct (trichotomy _ a1 a2) as [?|[?|?]];auto.

@@ -18,7 +18,7 @@ Definition sum_to_bool X Y : X + Y -> Bool
   := sum_ind _ (fun _ => false) (fun _ => true).
 
 Definition Smash@{u v w | u <= w, v <= w} (X : pType@{u}) (Y : pType@{v}) : pType@{w}
-  := [Pushout@{w w w w} (sum_to_prod@{w w w} X Y) (sum_to_bool@{u v w} X Y), pushl (point X, point Y)].
+  := [Pushout@{w w w w} (sum_to_prod@{w w} X Y) (sum_to_bool@{u v w} X Y), pushl (point X, point Y)].
 
 Section Smash.
 

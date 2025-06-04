@@ -20,7 +20,7 @@ Instance inverse_hom {A : Group} {B : AbGroup}
   : Inverse (@Hom Group _ A B) := grp_homo_compose ab_homo_negation.
 
 (** For [A] and [B] groups, with [B] abelian, homomorphisms [A $-> B] form an abelian group. *)
-Definition grp_hom `{Funext} (A : Group) (B : AbGroup) : Group.
+Definition grp_hom@{i j} `{Funext} (A : Group@{i}) (B : AbGroup@{j}) : Group@{max(i,j)}.
 Proof.
   snapply (Build_Group' (GroupHomomorphism A B) sgop_hom grp_homo_const inverse_hom).
   1: exact _.

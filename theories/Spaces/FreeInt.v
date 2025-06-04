@@ -6,7 +6,7 @@ From HoTT Require Import Basics Types WildCat.Core Truncations.Core Spaces.Int
 (** We can define the integers as the free group on one generator, which we denote [Z1] below. Results from Centralizer.v and Groups.FreeGroup let us show that [Z1] is abelian. *)
 
 (** We define [Z1] as the free group with a single generator. *)
-Definition Z1 := FreeGroup Unit.
+Definition Z1@{u} := FreeGroup@{u u u} Unit.
 Definition Z1_gen : Z1 := freegroup_in tt. (* The generator *)
 
 (** The recursion principle of [Z1] and its computation rule. *)
@@ -25,11 +25,11 @@ Definition ab_Z1 `{Funext} : AbGroup
   := Build_AbGroup Z1 _.
 
 (** The universal property of [ab_Z1]. *)
-Lemma equiv_Z1_hom@{u v | u < v} `{Funext} (A : AbGroup@{u})
-  : GroupIsomorphism (ab_hom@{u v} ab_Z1@{u v} A) A.
+Lemma equiv_Z1_hom@{u} `{Funext} (A : AbGroup@{u})
+  : GroupIsomorphism (ab_hom ab_Z1@{u u} A) A.
 Proof.
   snapply Build_GroupIsomorphism'.
-  - refine (_ oE (equiv_freegroup_rec@{u u u v} A Unit)^-1).
+  - refine (_ oE (equiv_freegroup_rec A Unit)^-1).
     symmetry. exact (Build_Equiv _ _ (fun a => unit_name a) _).
   - intros f g. cbn. reflexivity.
 Defined.

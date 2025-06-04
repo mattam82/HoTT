@@ -25,16 +25,14 @@ Coercion lgenerator : LocalGenerators >-> Funclass.
 
 (** We put this definition in a module so that no one outside of this file will use it accidentally.  It will be redefined in [Localization] to refer to the localization reflective subuniverse, which is judgmentally the same but will also pick up typeclass inference for [In]. *)
 Module Import IsLocal_Internal.
-  Definition IsLocal f X :=
+  Definition IsLocal@{i a} (f : LocalGenerators@{a}) (X : Type@{i}) :=
     (forall (i : lgen_indices f), ooExtendableAlong (f i) (fun _ => X)).
 End IsLocal_Internal.
 
 Class IsAccRSU@{a i} (O : Subuniverse@{i}) :=
 {
   acc_lgen : LocalGenerators@{a} ;
-  inO_iff_islocal : forall (X : Type@{i}),
-      (** We call [iff] explicitly to control the number of universe parameters. *)
-      iff@{i i i} (In O X) (IsLocal acc_lgen X) ;
+  inO_iff_islocal : forall (X : Type@{i}), iff (In O X) (IsLocal acc_lgen X) ;
 }.
 
 Arguments acc_lgen O {_}.
@@ -83,7 +81,7 @@ Definition null_to_local_generators : NullGenerators@{a1} -> LocalGenerators@{a2
 (** As with [IsLocal], the real version of this notation will be defined in [Nullification]. *)
 Module Import IsNull_Internal.
   Definition IsNull (S : NullGenerators@{a}) (X : Type@{i})
-    := IsLocal@{i i a} (null_to_local_generators@{a a} S) X.
+    := IsLocal@{i a} (null_to_local_generators@{a a} S) X.
 End IsNull_Internal.
 
 (** A central fact: if a type [X] is null for all the fibers of a map [f], then it is [f]-local.  (NB: the converse is *not* generally true.)  TODO: Should this go in [Extensions]? *)
@@ -116,8 +114,7 @@ Definition ooextendable_isnull_fibers {A B} (f : A -> B) (C : B -> Type)
 Class IsAccModality@{a i} (O : Subuniverse@{i}) :=
 {
   acc_ngen : NullGenerators@{a} ;
-  inO_iff_isnull : forall (X : Type@{i}),
-      iff@{i i i} (In O X) (IsNull acc_ngen X) ;
+  inO_iff_isnull : forall (X : Type@{i}), iff (In O X) (IsNull acc_ngen X) ;
 }.
 
 Arguments acc_ngen O {_}.

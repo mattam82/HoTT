@@ -38,7 +38,7 @@ Succeed Check fold_left_app@{_ _}.
 Succeed Check fold_right_app@{_ _}.
 Succeed Check length_list_map@{_ _}.
 Succeed Check inlist_map@{_ _}.
-Succeed Check inlist_map'@{_ _ _}.
+Succeed Check inlist_map'@{_ _}.
 Succeed Check list_map_id@{_}.
 Succeed Check list_map_compose@{_ _ _}.
 Succeed Check length_list_map2@{_ _ _}.
@@ -109,6 +109,6 @@ Succeed Check fold_left_preserves@{_ _ _ _}.
 Succeed Check istrunc_for_all@{_ _}.
 Succeed Check istrunc_for_all'@{_ _}.
 Succeed Check for_all_repeat@{_ _}.
-Succeed Check list_sigma@{_ _ _}.
-Succeed Check length_list_sigma@{_ _ _}.
+Succeed Check list_sigma@{_ _}.
+Succeed Check length_list_sigma@{_ _}.
 Succeed Check decidable_for_all@{_ _}.

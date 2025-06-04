@@ -704,7 +704,7 @@ Defined.
 
 (** A function from [nat] to a finite set must repeat itself eventually. *)
 Section Enumeration.
-  Context `{Funext} {X} `{Finite@{_ Set _} X} (e : nat -> X).
+  Context `{Funext} {X} `{Finite@{_ Set} X} (e : nat -> X).
 
   Let er (n : nat) : Fin n -> X
     := fun k => e (nat_fin n k).

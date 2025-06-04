@@ -205,7 +205,7 @@ Proof.
     2: intros []; apply istrunc_hprop.
     nrefine (istrunc_equiv_istrunc
                _ (equiv_sig_coind (fun g:G => Type) (fun g x => IsHProp x))^-1%equiv).
-    apply istrunc_forall.
+    unshelve eapply istrunc_forall.
 Defined.
 
 (** ** Underlying group of a subgroup *)

@@ -18,11 +18,11 @@ Definition IncoherentWeakUnivalence :=
 
 (** Finally, it even suffices to consider only just a few special cases. This is due to Ian Orton and Andrew Pitts. *)
 Record VeryWeakUnivalence :=
-  { unit : forall A, A = { a : A & Unit };
+  { unit : forall A : Type, A = { a : A & Unit };
     flip : forall A B (C : A -> B -> Type),
         { a : A & { b : B & C a b }} = { b : B & { a : A & C a b }};
     contract : forall A, Contr A -> A = Unit;
-    unit_comp : forall A a, transport idmap (unit A) a = (a;tt);
+    unit_comp : forall A a, transport idmap (unit A) a = (a; tt);
     flip_comp : forall A B C (a:A) (b:B) (c : C a b),
         transport idmap (flip A B C) (a ; (b ; c)) = (b ; (a ; c))
   }.
@@ -84,3 +84,4 @@ Proof.
     rewrite transport_sigma'; cbn.
     apply ap, path_contr. }
 Defined.
+ 

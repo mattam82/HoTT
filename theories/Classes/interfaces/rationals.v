@@ -6,10 +6,9 @@ Require Import
   - i universe of origin type
   - j universe of target types
   - k universe of applied apart of target types
-  - l universe of Field property of target types 
 *)
-Class RationalsToField@{i j k l} (A : Type@{i}) :=
-  rationals_to_field : forall (B : Type@{j}) `{IsField@{j l k} B}
+Class RationalsToField@{i j k} (A : Type@{i}) :=
+  rationals_to_field : forall (B : Type@{j}) `{IsField@{j k} B}
     `{!FieldCharacteristic B 0}, A -> B.
 
 Arguments rationals_to_field A {_} B {_ _ _ _ _ _ _ _ _} _.

@@ -113,9 +113,9 @@ Section contents.
 Universe U.
 
 (* {U U} because we do forall n : N, {id} n = nat_to_sr N N n *)
-Context `{Funext} `{Univalence} {N : Type@{U} } `{Naturals@{U U U U U U U U} N}.
+Context `{Funext} `{Univalence} {N : Type@{U} } `{Naturals@{U U U} N}.
 
-Lemma from_nat_stmt  (N':Type@{U}) `{Naturals@{U U U U U U U U} N'}
+Lemma from_nat_stmt  (N':Type@{U}) `{Naturals@{U U U} N'}
   : forall (P : SemiRings.Operations -> Type),
   P (SemiRings.BuildOperations N') -> P (SemiRings.BuildOperations N).
 Proof.
@@ -153,9 +153,9 @@ Section borrowed_from_nat.
 
   #[export] Instance nat_plus_cancel_l : forall z : N, LeftCancellation (+) z.
   Proof.
-  refine (from_nat_stmt@{i U}
-    nat (fun s => forall z : s, LeftCancellation plus z) _).
-  simpl. first [exact nat_plus_cancel_l@{U i}|exact nat_plus_cancel_l@{U}].
+    refine (from_nat_stmt@{U}
+    nat (fun s => forall z : s, LeftCancellation plus@{U} z) _).    
+    simpl. first [exact nat_plus_cancel_l@{U i}|exact nat_plus_cancel_l@{U}].
   Qed.
 
   #[export] Instance rightcancellation_plus_nat : forall z : N, RightCancellation (+) z.

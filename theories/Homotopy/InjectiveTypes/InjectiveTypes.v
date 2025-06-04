@@ -24,12 +24,12 @@ Section UniverseStructure.
 
   (** A type [D] is said to be injective if for every embedding [j : X -> Y] and every function [f : X -> D], there merely exists a [f' : Y -> D] such that [f' o j == f]. *)
   Definition IsInjectiveType@{uvw | uv <= uvw, uw <= uvw, vw <= uvw} (D : Type@{w})
-    := forall (X : Type@{u}) (Y : Type@{v}) (j : X -> Y) (isem : IsEmbedding@{u v uv} j)
+    := forall (X : Type@{u}) (Y : Type@{v}) (j : X -> Y) (isem : IsEmbedding@{u v} j)
       (f : X -> D), merely@{uvw} (sig@{vw uw} (fun f' => f' o j == f)).
 
   (** A type is then algebraically injective if the same is true, but without the propositional truncation. We use a class here instead of just a sigma type to make proofs more readable. *)
   Class IsAlgebraicInjectiveType@{} (D : Type@{w}) := {
-    lift_ai {X : Type@{u}} {Y : Type@{v}} (j : X -> Y) {isem : IsEmbedding@{u v uv} j} (f : X -> D)
+    lift_ai {X : Type@{u}} {Y : Type@{v}} (j : X -> Y) {isem : IsEmbedding@{u v} j} (f : X -> D)
       : Y -> D;
     is_ext_ai {X : Type@{u}} {Y : Type@{v}} (j : X -> Y) {isem} f
       : lift_ai j f o j == f;
@@ -52,7 +52,7 @@ Section UniverseStructure.
     intros Eai.
     refine (lift_ai (Empty_rec@{v}) idmap tt).
     apply istruncmap_mapinO_tr.
-    rapply mapinO_between_inO@{uv u v uv}.
+    rapply mapinO_between_inO@{uv u v}.
   Defined.
 
 End UniverseStructure.
@@ -126,8 +126,8 @@ Definition retract_alg_inj_embedding@{v w vw | v <= vw, w <= vw}
   := (lift_ai _ idmap; is_ext_ai _ idmap).
 
 (** Any algebraically [u],[su]-injective type [X : Type@{u}], is a retract of [X -> Type@{u}]. *)
-Definition retract_power_universe_alg_usuinj@{u su | u < su} `{Univalence}
-  (D : Type@{u}) (Dai : IsAlgebraicInjectiveType@{u su u su u su} D)
+Definition retract_power_universe_alg_usuinj@{u} `{Univalence}
+  (D : Type@{u}) (Dai : IsAlgebraicInjectiveType@{u u+1 u u+1 u u+1} D)
   : { r : (D -> Type@{u}) -> D & r o (@paths D) == idmap }
   := retract_alg_inj_embedding D (@paths D) isembedding_paths Dai.
 
@@ -155,7 +155,7 @@ Class IsAlgebraicFlabbyType@{u w} (D : Type@{w}) := {
 Definition cconst_is_const_cond@{u w uw | u <= uw, w <= uw}
   (D : Type@{w})
   := forall (X : Type@{u}) (f : X -> D),
-    ConditionallyConstant@{u w uw} f -> sig@{uw uw} (fun d => forall x, d = f x).
+    ConditionallyConstant@{u w} f -> sig@{uw uw} (fun d => forall x, d = f x).
 
 Definition alg_flab_cconst_is_const@{u w uw | u <= uw, w <= uw}
   (D : Type@{w}) (ccond : cconst_is_const_cond@{u w uw} D)
@@ -272,7 +272,7 @@ Section AssumePropResizing.
   Defined.
 
   (** Any algebraically injective type [D : Type@{u}] is a retract of [X -> Type@{u}] with [X : Type@{u}]. This is a universe independent version of [retract_power_universe_alg_usuinj]. *)
-  Definition retract_power_universe_alg_inj@{u su | u < su} `{Univalence}
+  Definition retract_power_universe_alg_inj@{u su | u < su, su = u+1} `{Univalence}
     {D : Type@{u}} (Dai : IsAlgebraicInjectiveType@{u u u u u u} D)
     : exists (X : Type@{u}) (s : D -> (X -> Type@{u})) (r : (X -> Type@{u}) -> D), r o s == idmap.
   Proof.
@@ -319,7 +319,7 @@ Section UniverseStructure.
   Proof.
     revert mDai.
     napply Trunc_rec@{T T}. (* Manually stripping truncations so as to control universe variables. *)
-    - repeat (napply istrunc_forall@{T T T}; intro).
+    - repeat (napply istrunc_forall@{T T}; intro).
       apply istrunc_truncation.
     - intro Dai.
       exact (inj_alg_inj@{} D Dai).
@@ -359,7 +359,7 @@ Definition merely_retract_inj_embedding@{v w vw svw | v <= vw, w <= vw, vw < svw
 Definition inj_arrow
   @{u v w t uv ut vt tw uvt utw vtw utvw
   | u <= uv, v <= uv, u <= ut, t <= ut, v <= vt, t <= vt, t <= tw, w <= tw, uv <= uvt, ut <= uvt,
-    vt <= uvt, ut <= utw, tw <= utw, vt <= vtw, tw <= vtw, uvt <= utvw, utw <= utvw, vtw <= utvw}
+    vt <= uvt, ut <= utw, tw <= utw, vt <= vtw, tw <= vtw, uvt <= utvw, utw <= utvw, vtw <= utvw, ut <= max(u,t), vt <= max(v,t)}
   `{Funext} {A : Type@{t}} (D : Type@{w})
   (Di : IsInjectiveType@{ut vt w uvt utw vtw utvw} D)
   : IsInjectiveType@{u v tw uv utw vtw utvw} (A -> D).
@@ -367,7 +367,7 @@ Proof.
   intros X Y j isem f.
   assert (embId : IsEmbedding (fun a : A => a)) by rapply istruncmap_mapinO_tr.
   pose proof (mD := Di (X * A) (Y * A) (functor_prod j equiv_idmap)
-    (istruncmap_functor_prod@{u v t t ut vt uvt uvt uv t} _ _ _) (uncurry f)).
+    (istruncmap_functor_prod@{u v t t} _ _ _) (uncurry f)).
   revert mD.
   rapply Trunc_rec@{utvw utvw}.
   intros [g e].
@@ -378,13 +378,13 @@ Proof.
 Defined.
 
 (** Any [u],[su]-injective type [X : Type@{u}], is a retract of [X -> Type@{u}] in an unspecified way. *)
-Definition merely_retract_power_universe_inj@{u su ssu | u < su, su < ssu}
+Definition merely_retract_power_universe_inj@{u su ssu | u < su, su < ssu, su = u+1, ssu = su+1}
   `{Univalence} (D : Type@{u}) (Di : IsInjectiveType@{u su u su u su su} D)
   : merely@{su} (sig@{su su} (fun r => r o (@paths D) == idmap))
   := merely_retract_inj_embedding D (@paths D) isembedding_paths Di.
 
 (** Inverse of [inj_merely_alg_inj] modulo universes. *)
-Definition merely_alg_inj_inj@{u su ssu | u < su, su < ssu} `{Univalence}
+Definition merely_alg_inj_inj@{u su ssu | u < su, su < ssu, su = u+1, ssu = su+1} `{Univalence}
   (D : Type@{u}) (Di : IsInjectiveType@{u su u su u su su} D)
   : merely@{su} (IsAlgebraicInjectiveType@{u u u u u u} D).
 Proof.
@@ -417,7 +417,7 @@ Definition decidable_alg_flab_hprop@{w} `{Funext} (P : HProp@{w})
 Proof.
   pose (inl' := inl : P + ~P -> (P + ~P) + (Unit : Type@{w})).
   assert (l : {d : (P + ~P) + (Unit : Type@{w}) & forall z, d = inl' z}).
-  { refine (center_af _; contr_af inl'). rapply ishprop_decidable_hprop@{w w}. }
+  { refine (center_af _; contr_af inl'). rapply ishprop_decidable_hprop@{w}. }
   destruct l as [[s | u] l2].
   - exact s.
   - assert (np := fun p => inl_ne_inr _ _ (l2 (inl p))^).

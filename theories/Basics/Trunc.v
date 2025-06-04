@@ -388,10 +388,10 @@ Definition istrunc_isequiv_istrunc@{a b} (A : Type@{a}) {B : Type@{b}} (f : A ->
 Proof.
   generalize dependent B; generalize dependent A.
   simple_induction n n IH; simpl; intros A ? B f ?.
-  - exact (contr_equiv@{b a} _ f).
-  - apply istrunc_S@{b}.
+  - exact (contr_equiv _ f).
+  - apply istrunc_S.
     intros x y.
-    exact (IH _ _ _ (ap@{b a} (f^-1))^-1 _).
+    exact (IH _ _ _ (ap (f^-1))^-1 _).
 Defined.
 
 Definition istrunc_equiv_istrunc A {B} (f : A <~> B) `{IsTrunc n A}
@@ -409,6 +409,7 @@ Notation IsEmbedding := (IsTruncMap (-1)).
 
 (** It is convenient for some purposes to consider the universe of all n-truncated types (within a given universe of types).  In particular, this allows us to state the important fact that each such universe is itself (n+1)-truncated. *)
 
+#[universes(cumulative)]
 Record TruncType (n : trunc_index) := {
   trunctype_type : Type ;
   trunctype_istrunc :: IsTrunc n trunctype_type
@@ -435,7 +436,7 @@ Definition smallntype@{i j} (n : trunc_index) (P : TruncType@{j} n) {smallP : Is
   : TruncType@{i} n.
 Proof.
   napply (Build_TruncType n (smalltype@{i j} P)).
-  apply (@istrunc_equiv_istrunc@{i j} _ _ (equiv_smalltype@{i j} P)^-1 n _).
+  apply (@istrunc_equiv_istrunc@{j i} _ _ (equiv_smalltype@{i j} P)^-1 n _).
 Defined.
 
 Notation smallhprop := (smallntype (-1)).
@@ -512,19 +513,19 @@ Definition contr_forall `{Funext} `{P : A -> Type} `{forall a, Contr (P a)}
   : Contr (forall a, P a).
 Proof.
   apply (Build_Contr _ (fun a => center (P a))).
-  intro f.  apply path_forall.  intro a.  apply contr.
+  intro f. apply path_forall. intro a. apply contr.
 Defined.
 
-Instance istrunc_forall@{u u0} `{Funext} {A : Type@{u}} `{P : A -> Type@{u0}} `{forall a, IsTrunc n (P a)}
+Instance istrunc_forall@{u u0|} `{Funext} {A : Type@{u}} `{P : A -> Type@{u0}} `{forall a, IsTrunc n (P a)}
   : IsTrunc n (forall a, P a) | 100.
 Proof.
   generalize dependent P.
   simple_induction n n IH; simpl; intros P ?.
   (* case [n = -2], i.e. contractibility *)
-  - exact contr_forall@{u0 max(u,u0)}.
+  - exact contr_forall@{u max(u,u0)}. 
   (* case n = n'.+1 *)
   - apply istrunc_S@{max(u,u0)}.
-    intros f g; exact (istrunc_isequiv_istrunc@{max(u,u0) max(u,u0)} _ (apD10@{max(u,u0) max(u,u0)} ^-1)).
+    intros f g; exact (istrunc_isequiv_istrunc@{max(u,u0) max(u,u0)} _ (apD10@{u u0} ^-1)).
 Defined.
 
 (** Truncatedness is an hprop. *)

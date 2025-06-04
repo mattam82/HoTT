@@ -67,11 +67,11 @@ Ltac strip_truncations :=
 
 (** ** [Trunc] is a modality *)
 
-Definition Tr (n : trunc_index) : Modality.
+Definition Tr@{a} (n : trunc_index) : Modality@{a}.
 Proof.
   srapply (Build_Modality (fun A => IsTrunc n A)); cbn.
   - intros A B ? f ?; exact (istrunc_isequiv_istrunc A f).
-  - exact (Trunc n).
+  - exact (fun A => Trunc n A).
   - intros; apply istrunc_truncation.
   - intros A; exact tr.
   - intros A B ? f oa; cbn in *.
@@ -107,8 +107,12 @@ Section TruncationModality.
 
   (** Since a modality lives on a single universe, by default if we simply define [Trunc_functor] to be [O_functor] then it would force [X] and [Y] to live in the same universe.  But since we defined [Trunc] as a cumulative inductive, if we add universe annotations we can make [Trunc_functor] more universe-polymorphic than [O_functor] is.  This is sometimes useful.  *)
   Definition Trunc_functor@{i j k | i <= k, j <= k} {X : Type@{i}} {Y : Type@{j}} (f : X -> Y)
+    : Trunc@{i} n X -> Trunc@{j} n Y
+    := O_functor@{k k k} (Tr@{k} n) f.
+
+  Definition Tr_functor@{i j k | i <= k, j <= k} {X : Type@{i}} {Y : Type@{j}} (f : X -> Y)
     : Tr@{i} n X -> Tr@{j} n Y
-    := O_functor@{k k k} (Tr n) f.
+    := Trunc_functor@{i j k} f.
 
   #[export] Instance is0functor_Tr : Is0Functor (Tr n)
     := Build_Is0Functor (Tr n) (@Trunc_functor).
@@ -359,8 +363,7 @@ Proof.
     nrefine (mapinO_compose _ (functor_forall_id _)).
     1: exact _. (* The first part is an equivalence, so it's an embedding. *)
     rapply mapinO_functor_forall_id.
-    intro y.
-    exact isembedding_equiv_fun.
+    
   - (* The composite is an equivalence because it is homotopic to the identity. *)
     simpl.
     srapply (isequiv_homotopic idmap).
@@ -382,7 +385,7 @@ Proof.
   destruct (trunc_index_min_path n m) as [p|q].
   + assert (l := trunc_index_min_leq_right n m).
     destruct p^; clear p.
-    snapply (Build_Equiv _ _ (Trunc_functor _ tr)).
+    snapply (Build_Equiv _ _ (Tr_functor _ tr)).
     napply O_inverts_conn_map.
     rapply (conn_map_O_leq _ (Tr m)).
     rapply O_leq_Tr_leq.

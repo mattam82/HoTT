@@ -220,9 +220,8 @@ Arguments issemigrouppreserving_grp_homo {G H} f _ : rename.
 (** ** Basic properties of group homomorphisms *)
 
 (** Group homomorphisms preserve group operations. This is an alias for [issemigrouppreserving_grp_homo] with the identity written explicitly. *)
-Definition grp_homo_op
-  : forall {G H : Group} (f : GroupHomomorphism G H) (x y : G), f (x * y) = f x * f y
-  := @issemigrouppreserving_grp_homo.
+Definition grp_homo_op {G H : Group} (f : GroupHomomorphism G H) : forall (x y : G), f (x * y) = f x * f y
+  := @issemigrouppreserving_grp_homo G H f.
 #[export] Hint Immediate grp_homo_op : group_db.
 
 (** Group homomorphisms are unit preserving. *)
@@ -241,9 +240,8 @@ Defined.
 Opaque isunitpreserving_grp_homo.
 
 (** Group homomorphisms preserve identities. This is an alias for the previous statement. *)
-Definition grp_homo_unit
-  : forall {G H : Group} (f : GroupHomomorphism G H), f mon_unit = mon_unit
-  := @isunitpreserving_grp_homo.
+Definition grp_homo_unit {G H : Group} (f : GroupHomomorphism G H) : f mon_unit = mon_unit
+  := @isunitpreserving_grp_homo G H f.
 #[export] Hint Immediate grp_homo_unit : group_db.
 
 (** Therefore, group homomorphisms are monoid homomorphisms. *)
@@ -775,7 +773,7 @@ Instance isgraph_group : IsGraph Group
 Definition isHom_GroupIsomorphism (G H : Group) : GroupIsomorphism G H -> Hom G H := idmap.
 Coercion isHom_GroupIsomorphism  : GroupIsomorphism >-> Hom.
 
-Instance is01cat_group : Is01Cat Group :=
+Instance is01cat_group@{u} : Is01Cat@{u+1 u} Group@{u} :=
   Build_Is01Cat Group _ (@grp_homo_id) (@grp_homo_compose).
 
 (** Helper notation so that the wildcat instances can easily be inferred. *)
@@ -890,13 +888,14 @@ Defined.
 
 (** ** The trivial group *)
 
-Definition grp_trivial : Group.
+Definition grp_trivial@{} : Group@{0}.
 Proof.
   snapply (Build_Group' Unit (fun _ _ => tt) tt (fun _ => tt));
     only 1: exact _; by intros [].
 Defined.
 
 (** Map out of trivial group. *)
+
 Definition grp_trivial_rec (G : Group) : GroupHomomorphism grp_trivial G.
 Proof.
   snapply Build_GroupHomomorphism.

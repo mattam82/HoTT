@@ -26,7 +26,7 @@ Context `{AlmostRing C} `{DecidablePaths C}.
 
 (* [V] is the type of variables, ie we are defining polynomials [C[V]].
    It has a computable compare so we can normalise polynomials. *)
-Context `{Trichotomy@{Set Set Set} V Vlt}.
+Context `{Trichotomy@{Set Set} V Vlt}.
 
 (* Polynomials are supposed (at the meta level) to be in normal form:
    PX P v Q verifies
