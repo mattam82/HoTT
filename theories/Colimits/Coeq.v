@@ -9,8 +9,9 @@ Local Open Scope path_scope.
 
 (** ** Definition *)
 
+(* Previous version forced i = j! *)
 Definition Coeq@{i j u} {B : Type@{i}} {A : Type@{j}} (f g : B -> A) : Type@{u}
-  := GraphQuotient@{i j u} (fun a b => {x : B & (f x = a) * (g x = b)}).
+  := GraphQuotient@{j u u} (fun a b => {x : B & (f x = a) * (g x = b)}).
 
 Definition coeq {B A f g} (a : A) : @Coeq B A f g := gq a.
 Definition cglue {B A f g} b : @coeq B A f g (f b) = coeq (g b)

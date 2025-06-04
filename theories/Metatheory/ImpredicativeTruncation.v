@@ -7,19 +7,19 @@ Require Import Universes.Smallness.
 Local Open Scope path_scope.
 
 (** Using only function extensionality, we can define a "propositional truncation" [Trm A] of a type [A] in universe [i] which eliminates into propositions in universe [j].  It lands in [max(i,j+1)].  So if we want it to land in universe [i], then we can only eliminate into propositions in a strictly smaller universe [j].  Or, if we want it to eliminate into propositions in universe [i], then it must land in a strictly larger universe. *)
-Definition Trm@{i j | } (A : Type@{i})
+Definition Trm@{i j| } (A : Type@{i})
   := forall P:Type@{j}, IsHProp P -> (A -> P) -> P.
 
 Definition trm@{i j | } {A : Type@{i}} : A -> Trm@{i j} A
   := fun a P HP f => f a.
 
 (** Here [k] plays the role of [max(i,j+1)]. *)
-Instance ishprop_Trm@{i j k | i <= k, j < k} `{Funext} (A : Type@{i})
+Instance ishprop_Trm@{i j} `{Funext} (A : Type@{i})
   : IsHProp (Trm@{i j} A).
 Proof.
-  napply istrunc_forall@{k k k}; intro B.
-  napply istrunc_forall@{j k k}; intro ishp.
-  apply istrunc_forall@{k j k}.
+  napply istrunc_forall; intro B.
+  napply istrunc_forall; intro ishp.
+  apply istrunc_forall.
 Defined.
 
 (** As mentioned above, it eliminates into propositions in universe [j]. *)
@@ -41,7 +41,7 @@ Definition functor_Trm@{i j i' j' | i' <= j, j' < j} `{Funext}
   := Trm_rec (trm o f).
 
 (** We also record the dependent induction principle.  But it only computes propositionally. *)
-Definition Trm_ind@{i j k | i <= k, j < k} {A : Type@{i}} `{Funext}
+Definition Trm_ind@{i j} {A : Type@{i}} `{Funext}
   {P : Trm@{i j} A -> Type@{j}} {p : forall x, IsHProp@{j} (P x)} (f : forall a, P (trm a))
   : forall x, P x.
 Proof.
@@ -50,7 +50,7 @@ Proof.
   rapply x.
   intro a.
   refine (transport P _ (f a)).
-  rapply path_ishprop@{k}.
+  rapply path_ishprop.
 Defined.
 
 (** The universe constraints go away if we assume propositional resizing. *)
@@ -60,7 +60,7 @@ Section AssumePropResizing.
 
   (** If we assume propositions resizing, then we may as well quantify over propositions in the lowest universe [Set] when defining the truncation.  This reduces the number of universe variables.  We also assume that [Set < i], so that the construction lands in universe [i]. *)
   Definition imp_Trm@{i | Set < i} (A : Type@{i}) : Type@{i}
-    := Trm@{i Set} A.
+    := Trm@{i 0} A.
 
   (** Here we use propositional resizing to resize a arbitrary proposition [P] from an arbitrary universe [j] to universe [Set], so there is no constraint on the universe [j].  In particular, we can take [j = i], which shows that [imp_Trm] is a reflective subuniverse of [Type@{i}], since any two maps into a proposition agree. *)
   Definition imp_Trm_rec@{i j | Set < i} {A : Type@{i}}
@@ -70,10 +70,11 @@ Section AssumePropResizing.
                  (ma (smalltype@{Set j} P) _ ((equiv_smalltype@{Set j} P)^-1 o f)).
 
   (** Similarly, there are no constraints between [i] and [i'] in the next definition, so they could be taken to be equal. *)
-  Definition functor_imp_Trm@{i i' | Set < i, Set < i'} `{Funext}
+  
+  Definition functor_imp_Trm@{i i'| Set < i, Set < i'} `{Funext}
     {A : Type@{i}} {A' : Type@{i'}} (f : A -> A')
     : imp_Trm@{i} A -> imp_Trm@{i'} A'
-    := imp_Trm_rec (trm o f).
+    := @imp_Trm_rec _ _ (@ishprop_Trm@{i' 0} H0 A') (trm@{i' 0} o f).
 
   (** Note that [imp_Trm_rec] only computes propositionally. *)
   Definition imp_Trm_rec_beta@{i j | Set < i} {A : Type@{i}}
@@ -89,13 +90,18 @@ End AssumePropResizing.
 
 (** Above, we needed the constraint [Set < i].  But one can use propositional resizing again to make [imp_Trm] land in the lowest universe, if that is needed.  (We'll in fact let it land in any universe [u].)  To do this, we need to assume [Funext] in the definition of the truncation itself. *)
 
+Axiom todo: forall A, A.
+
 Section TruncationWithFunext.
   Context `{PropResizing} `{Funext}.
-
+  
   (** [Funext] implies that [Trm A] is a proposition, so [PropResizing] can be used to put it in any universe. The construction passes through universe [k], which represents [max(i,Set+1)]. *)
-  Definition resized_Trm@{i k u | i <= k, Set < k} (A : Type@{i})
-    : Type@{u}
-    := smalltype@{u k} (Trm@{i Set} A).
+  Definition resized_Trm@{i k u|i <= k, 1 <= k} (A : Type@{i})
+    : Type@{u} :=
+    smalltype@{u k} (Trm@{i 0} A).
+
+  (* Definition resized_Trm@{i k u ?} (A : Type@{i}) : Type@{u}
+    := smalltype@{u max(i,1)} (Trm@{i k} A). *)
 
   Definition resized_trm@{i k u | i <= k, Set < k} {A : Type@{i}}
     : A -> resized_Trm@{i k u} A

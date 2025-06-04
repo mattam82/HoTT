@@ -72,7 +72,7 @@ Section AssumeStuff.
 
   Definition graph_succ@{} (A : Graph) : Graph.
   Proof.
-    snrefine (Build_Graph (sum@{s s} (vert A) Unit) _ _).
+    snrefine (Build_Graph (sum (vert A) Unit) _ _).
     - intros [x|x] [y|y].
       + exact (edge A x y).
       + exact Unit.
@@ -444,7 +444,7 @@ Section AssumeStuff.
   Proof.
     apply equiv_path_graph.
     exists equiv_idmap.
-    intros [x|[]] [y|[]]; apply iff_reflexive@{s s+1}.
+    intros [x|[]] [y|[]]; apply iff_reflexive.
   Qed.
 
   Definition graph_succ_zero@{} : graph_succ graph_zero = graph_one.
@@ -786,7 +786,7 @@ Section AssumeStuff.
       - refine (_ oE equiv_inverse (equiv_sigma_assoc _ _)).
         apply equiv_functor_sigma_id; intros f.
         cbn; apply equiv_sigma_prod0.
-      - refine (@istrunc_sigma@{nr nr nr} _ _ _ _ _).
+      - refine (@istrunc_sigma@{nr nr} _ _ _ _ _).
         + srefine (Build_Contr _ _ _).
           * exists (fun _ => x0); reflexivity.
           * intros [g H].
@@ -835,7 +835,7 @@ Section AssumeStuff.
     Qed.
 
     (** And here, essentially, is the inductive step. *)
-    Local Definition partial_Nrec_succ0 (n : N)
+    Local Definition partial_Nrec_succ0@{} (n : N)
       : partial_Nrec n <~> partial_Nrec (succ n).
     Proof.
       unfold partial_Nrec.
@@ -908,7 +908,7 @@ Section AssumeStuff.
     Defined.
     Local Definition partial_Nrec_succ@{}
       := Eval unfold partial_Nrec_succ0
-        in partial_Nrec_succ0@{nr}.
+        in partial_Nrec_succ0@{}.
 
     Local Instance contr_partial_Nrec@{} (n : N) : Contr (partial_Nrec n).
     Proof.

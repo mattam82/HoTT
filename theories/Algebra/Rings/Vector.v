@@ -43,14 +43,14 @@ Defined.
 Instance istrunc_vector@{i} (A : Type@{i}) (n : nat) k `{IsTrunc k.+2 A}
   : IsTrunc k.+2 (Vector A n).
 Proof.
-  rapply istrunc_sigma@{i i i}.
+  rapply istrunc_sigma@{i i}.
 Defined.
 
 Definition path_vector@{i} (A : Type@{i}) {n : nat} (v1 v2 : Vector@{i} A n)
   (H : forall i (H : (i < n)%nat), entry v1 i = entry v2 i)
   : v1 = v2.
 Proof.
-  rapply path_sigma_hprop@{i i i}.
+  rapply path_sigma_hprop@{i i}.
   snapply path_list_nth'.
   1: exact (pr2 v1 @ (pr2 v2)^).
   intros i Hi.

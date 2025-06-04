@@ -208,7 +208,7 @@ Proof.
       refine (ap (transport _ _) (1 @@ p) @ _); clear p.
       unfold transport2; rewrite concat_p_pp.
       match goal with
-          |- transport ?P ?p ((ap ?f ?q @ ap ?f ?r) @ ?s) = ?t
+          |- transport ?P ?p ((ap ?f ?q @ ap _ ?r) @ ?s) = ?t
           => refine (ap (transport P p) ((ap_pp f q r)^ @@ (idpath s)) @ _)
       end.
       pose (p := (fst (snd (snd (ext 3) h h) (fun b' : B => 1)
@@ -247,18 +247,18 @@ Qed.
 
 Import IsLocal_Internal.
 
-Definition islocal_equiv_islocal (f : LocalGenerators@{a})
+Definition islocal_equiv_islocal@{a i j} (f : LocalGenerators@{a})
            (X : Type@{i}) {Y : Type@{j}}
-           (Xloc : IsLocal@{i i' a} f X)
+           (Xloc : IsLocal@{i a} f X)
            (g : X -> Y) `{IsEquiv@{i j} _ _ g}
-: IsLocal@{j j' a} f Y.
+: IsLocal@{j a} f Y.
 Proof.
   intros i.
   (** We have to fiddle with the max universes to get this to work, since [ooextendable_postcompose] requires the max universe in both cases to be the same, whereas we don't want to assume that the hypothesis and conclusion are related in any way. *)
-  apply lift_ooextendablealong@{a a a a a a j j j k j'}.
-  refine (ooextendable_postcompose@{a a i j k k k k k k}
+  apply lift_ooextendablealong.
+  refine (ooextendable_postcompose
             _ _ (f i) (fun _ => g) _).
-  apply lift_ooextendablealong@{a a a a a a i i i i' k}.
+  apply lift_ooextendablealong.
   apply Xloc.
 Defined.
 
@@ -275,16 +275,16 @@ Module Export LocalizationHIT.
   (** Note that the following axiom actually contains a point-constructor.  We could separate out that point-constructor and make it an actual argument of the private inductive type, thereby getting a judgmental computation rule for it.  However, since locality is an hprop, there seems little point to this. *)
   Axiom islocal_localize
   : forall (f : LocalGenerators@{a}) (X : Type@{i}),
-      IsLocal@{i k a} f (Localize f X).
+      IsLocal@{i a} f (Localize f X).
 
-  Definition Localize_ind
+  Definition Localize_ind@{a i j}
            (f : LocalGenerators@{a}) (X : Type@{i})
            (P : Localize f X -> Type@{j})
            (loc' : forall x, P (loc x))
-           (islocal' : forall i, ooExtendableAlong_Over@{a a i j k}
-                                   (f i) (fun _ => Localize@{a i} f X)
+           (islocal' : forall i, ooExtendableAlong_Over
+                                   (f i) (fun _ => Localize f X)
                                    (fun _ => P)
-                                   (islocal_localize@{a i k} f X i))
+                                   (islocal_localize f X i))
            (z : Localize f X)
   : P z
     := match z with
@@ -344,11 +344,9 @@ Proof.
                                  (fun A => Build_Reflects _ _ _ _)).
   - (** Typeclass inference can find this, but we give it explicitly to prevent extra universes from cropping up. *)
     intros ? T; unfold IsLocal.
-    nrefine (istrunc_forall@{a i i}); try assumption.
+    nrefine (istrunc_forall); try assumption.
     intros i.
-    apply ishprop_ooextendable@{a a i i i
-                                i i i i i
-                                i i i i i i}.
+    apply ishprop_ooextendable.
   - apply islocal_equiv_islocal.
   - apply islocal_localize.
   - cbn. intros Q Q_inO.
@@ -492,7 +490,7 @@ Proof.
 Defined.
 
 (** The same is true for inverted maps, too. *)
-Definition O_inverts_O_leq'@{a i1 i2}
+Definition O_inverts_O_leq'@{a i1 i2 | i2 <= i1, a <= i1, a <= i2}
            (O1 : ReflectiveSubuniverse@{i1}) (O2 : ReflectiveSubuniverse@{i2}) `{IsAccRSU@{a i1} O1}
            `{O_leq@{i1 i2 i2} O1 O2} {A B : Type@{i2}}
            (f : A -> B) `{O_inverts O2 f}
@@ -503,6 +501,6 @@ Proof.
   napply (O_inverts_O_leq O1 (lift_accrsu@{a i1 i1} O1) f).
   1:exact _.
   (** It looks like we can say [exact e], but that would collapse the universes [i1] and [i2].  You can check with [Set Printing Universes. Unset Printing Notations.] that [e] and the goal have different universes.  So instead we do this: *)
-  refine (@isequiv_homotopic _ _ _ _ e _).
+  refine (@isequiv_homotopic _ _ _ _ e _).  
   apply O_indpaths; intros x; reflexivity.
 Defined.

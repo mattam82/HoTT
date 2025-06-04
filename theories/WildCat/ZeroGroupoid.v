@@ -145,14 +145,15 @@ Defined.
 (** Here we define products of families of 0-groupoids. *)
 
 (** [I]-indexed products for an [I]-indexed family of 0-groupoids. *)
-Definition prod_0gpd (I : Type) (G : I -> ZeroGpd) : ZeroGpd.
+Definition prod_0gpd@{i ob h} (I : Type@{i}) (G : I -> ZeroGpd@{ob h}) : ZeroGpd@{max(i,ob) max(i,ob,h)}.
 Proof.
   rapply (Build_ZeroGpd (forall i, G i)).
 Defined.
 
 (** The [i]-th projection from the [I]-indexed product of 0-groupoids. *)
-Definition prod_0gpd_pr {I : Type} {G : I -> ZeroGpd}
-  : forall i, prod_0gpd I G $-> G i.
+
+Definition prod_0gpd_pr@{u ob h ?} {I : Type@{u}} {G : I -> ZeroGpd@{ob h}}
+  : forall i, prod_0gpd@{u ob h} I G $-> G i.
 Proof.
   intros i.
   apply (Build_Fun01' (fun f => f i)); cbn beta.

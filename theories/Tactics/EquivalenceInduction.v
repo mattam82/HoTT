@@ -5,11 +5,12 @@ Require Import Types.Equiv Types.Prod Types.Forall Types.Sigma Types.Universe.
 (** We define typeclasses and tactics for doing equivalence induction. *)
 
 Local Open Scope equiv_scope.
+Definition true := Unit.
 
 Class RespectsEquivalenceL@{i j k s0 s1} (A : Type@{i}) (P : forall (B : Type@{j}), (A <~> B) -> Type@{k})
-  := respects_equivalenceL : sig@{s0 s1} (fun e' : forall B (e : A <~> B), P A (equiv_idmap A) <~> P B e => Funext -> equiv_idmap _ = e' A (equiv_idmap _) ).
+  := respects_equivalenceL : sig@{s0 s1} (fun e' : forall (B : Type@{j}) (e : A <~> B), P A (equiv_idmap A) <~> P B e => Funext -> equiv_idmap _ = e' A (equiv_idmap _) ).
 Class RespectsEquivalenceR@{i j k s0 s1} (A : Type@{i}) (P : forall (B : Type@{j}), (B <~> A) -> Type@{k})
-  := respects_equivalenceR : sig@{s0 s1} (fun e' : forall B (e : B <~> A), P A (equiv_idmap A) <~> P B e => Funext -> equiv_idmap _ = e' A (equiv_idmap _) ).
+  := respects_equivalenceR : sig@{s0 s1} (fun e' : forall (B : Type@{j}) (e : B <~> A), P A (equiv_idmap A) <~> P B e => Funext -> equiv_idmap _ = e' A (equiv_idmap _) ).
 (** We use a sigma type rather than a record for two reasons:
 
     1. In the dependent cases, where one equivalence-respectfulness proof will show up in the body of another goal, it might be the case that using sigma types allows us to reuse the respectfulness lemmas of sigma types, rather than writing new ones for this type.

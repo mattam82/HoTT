@@ -265,25 +265,25 @@ apply (@F_rect P (fun _ => istrunc_hprop) dclass).
 intros;apply path_ishprop.
 Qed.
 
-Definition F_ind2@{i j} (P : F -> F -> Type@{i}) {sP : forall x y, IsHProp (P x y)}
+Definition F_ind2@{i} (P : F -> F -> Type@{i}) {sP : forall x y, IsHProp (P x y)}
   (dclass : forall x y : Frac R, P (' x) (' y)) : forall x y, P x y.
 Proof.
 apply (@F_ind (fun x => forall y, _)).
-- intros;apply istrunc_forall@{UR i j}.
+- intros;apply istrunc_forall@{UR i}.
 - intros x.
   apply (F_ind _);intros y.
   apply dclass.
 Qed.
 
-Definition F_ind3@{i j} (P : F -> F -> F -> Type@{i})
-  {sP : forall x y z, IsHProp (P x y z)}
+Definition F_ind3@{i} (P : F -> F -> F -> Type@{i})
+  {sP : forall x y z, IsHProp@{i} (P x y z)}
   (dclass : forall x y z : Frac R, P (' x) (' y) (' z))
   : forall x y z, P x y z.
 Proof.
-apply (@F_ind (fun x => forall y z, _)).
-- intros;apply istrunc_forall@{UR j j}.
+apply (@F_ind@{max(UR,i)} (fun x => forall y z, _)).
+- intros;apply istrunc_forall@{UR _}.
 - intros x.
-  apply (F_ind2@{i j} _). auto.
+  apply (F_ind2@{_} _). auto.
 Qed.
 
 Definition F_rec@{i} {T : Type@{i} } {sT : IsHSet T}
@@ -296,12 +296,12 @@ Definition F_rec_compute T sT dclass dequiv x
   : @F_rec T sT dclass dequiv (' x) = dclass x
   := 1.
 
-Definition F_rec2@{i j} {T:Type@{i} } {sT : IsHSet T}
+Definition F_rec2@{i} {T:Type@{i} } {sT : IsHSet T}
   : forall (dclass : Frac R -> Frac R -> T)
   (dequiv : forall x1 x2, equiv x1 x2 -> forall y1 y2, equiv y1 y2 ->
     dclass x1 y1 = dclass x2 y2),
   F -> F -> T
-  := @quotient_rec2@{UR UR UR j i} _ _ _ _ _ (Build_HSet _).
+  := @quotient_rec2 _ _ _ _ _ (Build_HSet _).
 
 Definition F_rec2_compute {T sT} dclass dequiv x y
   : @F_rec2 T sT dclass dequiv (' x) (' y) = dclass x y
@@ -400,7 +400,7 @@ Defined.
 
 Lemma classes_eq_related@{} : forall q r, ' q = ' r -> equiv q r.
 Proof.
-apply classes_eq_related@{UR UR Ularge UR Ularge};apply _.
+apply classes_eq_related@{UR UR UR UR UR}; apply _.
 Qed.
 
 Lemma class_neq@{} : forall q r, ~ (equiv q r) -> ' q <> ' r.
@@ -522,11 +522,11 @@ apply (F_rec (fun x => class (Frac.lift f x))).
 intros;apply path,Frac.lift_respects;trivial.
 Defined.
 
-#[export] Instance lift_sr_morphism@{i} : IsSemiRingPreserving lift.
+#[export] Instance lift_sr_morphism@{} : IsSemiRingPreserving lift.
 Proof.
 (* This takes a few seconds. *)
 split;split;red.
-- apply (F_ind2@{UR1 UR2 i} _).
+- apply (F_ind2@{UR1 UR2} _).
   intros;simpl.
   apply @path. (* very slow or doesn't terminate without the @ but fast with it *)
   red;simpl.
@@ -534,18 +534,18 @@ split;split;red.
   reflexivity.
 - simpl. apply path.
   red;simpl. rewrite (preserves_0 (f:=f)). rewrite 2!mult_0_l. reflexivity.
-- apply (F_ind2@{UR1 UR2 i} _).
-  intros;simpl. apply @path.
+- apply (F_ind2@{UR1 UR2} _).
+  intros;simpl. apply path.
   red;simpl.
   rewrite <-!(preserves_mult (f:=f)). reflexivity.
 - simpl. apply path.
   red;simpl. apply commutativity.
 Qed.
 
-#[export] Instance lift_injective@{i} : IsInjective lift.
+#[export] Instance lift_injective@{} : IsInjective lift.
 Proof.
 red.
-apply (F_ind2@{UR1 i i} (fun _ _ => _ -> _)).
+apply (F_ind2@{UR1 _} (fun _ _ => _ -> _)).
 intros x y E.
 simpl in E.
 apply classes_eq_related in E. red in E;simpl in E.

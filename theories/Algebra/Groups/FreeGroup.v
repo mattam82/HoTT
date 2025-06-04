@@ -359,9 +359,9 @@ Section Reduction.
         by apply Hop.
   Defined.
   
-  Definition FreeGroup_ind_homotopy {G : Group} {f f' : FreeGroup $-> G}
+  Definition FreeGroup_ind_homotopy@{u v w} {G : Group@{u}} {f f' : FreeGroup@{v w} $-> G}
     (H : forall x, f (freegroup_in x) = f' (freegroup_in x))
-    : f $== f'.
+    : GpdHom@{max(u,v) v} f f'.
   Proof.
     rapply FreeGroup_ind_hprop.
     - exact (concat (grp_homo_unit f) (grp_homo_unit f')^).
@@ -520,7 +520,7 @@ Section FreeGroupGenerated.
   Defined.
 
   (* Therefore, the inclusion map is an equivalence, since it is known to be an embedding. *)
-  Definition isequiv_subgroup_incl_freegroupon
+  Definition isequiv_subgroup_incl_freegroupon@{}
     : IsEquiv (subgroup_incl (subgroup_generated (hfiber i))).
   Proof.
     apply isequiv_surj_emb.

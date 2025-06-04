@@ -26,7 +26,7 @@ Proof.
   - reflexivity.
   - discriminate.
 Defined.
-
+About internal_paths_rec_nodep.
 (** ** Concatenation *)
 
 (** Concatenating the empty list on the right is the identity. *)
@@ -83,8 +83,8 @@ Proof.
 Defined.
 
 (** An element of a concatenated list is equivalently either in the first list or in the second list. *)
-Definition equiv_inlist_app {A : Type} (l l' : list A) (x : A)
-  : InList x l + InList x l' <~> InList x (l ++ l').
+Definition equiv_inlist_app@{i} {A : Type@{i}} (l l' : list A) (x : A)
+  : InList@{i} x l + InList@{i} x l' <~> InList@{i} x (l ++ l').
 Proof.
   induction l as [|a l IHl].
   - apply sum_empty_l.
@@ -125,7 +125,7 @@ Proof.
 Defined.
 
 (** A function applied to an element of a list is an element of the mapped list. *)
-Definition inlist_map {A B : Type} (f : A -> B) (l : list A) (x : A)
+Definition inlist_map@{i j|} {A : Type@{i}} {B : Type@{j}} (f : A -> B) (l : list A) (x : A)
   : InList x l -> InList (f x) (list_map f l).
 Proof.
   simple_list_induction l y l IHl.
@@ -136,7 +136,7 @@ Proof.
 Defined.
 
 (** An element of a mapped list is equal to the function applied to some element of the original list. *)
-Definition inlist_map' {A B : Type} (f : A -> B) (l : list A) (x : B)
+Definition inlist_map'@{i j} {A : Type@{i}} {B : Type@{j}} (f : A -> B) (l : list A) (x : B)
   : InList x (list_map f l) -> { y : A & prod (f y = x) (InList y l) }.
 Proof.
   induction l as [|y l IHl].
@@ -157,7 +157,7 @@ Proof.
 Defined.
 
 (** A function that acts as the identity on the elements of a list is the identity on the mapped list. *)
-Lemma list_map_id {A : Type} (f : A -> A) (l : list A)
+Lemma list_map_id@{i} {A : Type@{i}} (f : A -> A) (l : list A)
   (Hf : forall x, InList x l -> f x = x)
   :  list_map f l = l.
 Proof.
@@ -203,9 +203,9 @@ Defined.
 Definition inlist_map2@{i j k u | i <= u, j <= u, k <= u}
   {A : Type@{i}} {B : Type@{j}} {C : Type@{k}}
   (f : A -> B -> C) defl defr l1 l2 x
-  : InList x (list_map2 f defl defr l1 l2) -> length l1 = length l2
+  : InList@{k} x (list_map2 f defl defr l1 l2) -> length l1 = length l2
     -> { y : A & { z : B &
-                        prod@{k u} ((f y z) = x) (InList y l1 * InList z l2) } }.
+                        prod@{k u} ((f y z) = x) (InList@{i} y l1 * InList@{j} z l2) } }.
 Proof.
   intros H p.
   induction l1 as [|y l1 IHl1] in l2, x, H, p |- * using list_ind@{i u}.
@@ -347,14 +347,14 @@ Definition nth' {A : Type} (l : list A) (n : nat) (H : n < length l) : A
   := pr1 (nth_lt l n H).
 
 (** The [nth'] element doesn't depend on the proof that [n < length l]. *)
-Definition nth'_nth' {A} (l : list A) (n : nat) (H H' : n < length l)
+Definition nth'_nth'@{a} {A : Type@{a}} (l : list A) (n : nat) (H H' : n < length l)
   : nth' l n H = nth' l n H'.
 Proof.
   apply ap, path_ishprop.
 Defined.
 
 (** Two equal lists have the same elements in the same positions. *)
-Definition nth'_path_list {A : Type} {l1 l2 : list A}
+Definition nth'_path_list@{a} {A : Type@{a}} {l1 l2 : list A}
   (p : l1 = l2) {n : nat} (Hn1 : n < length l1) (Hn2 : n < length l2)
   : nth' l1 n Hn1 = nth' l2 n Hn2.
 Proof.
@@ -376,14 +376,14 @@ Proof.
 Defined.
 
 (** The [nth'] element of a list is the same as the one given by [nth]. *)
-Definition nth_nth' {A} (l : list A) (n : nat) (H : n < length l)
+Definition nth_nth'@{a} {A : Type@{a}} (l : list A) (n : nat) (H : n < length l)
   : nth l n = Some (nth' l n H).
 Proof.
   exact (nth_lt l n H).2.
 Defined.
 
 (** The [nth'] element of a [cons] indexed at [n.+1] is the same as the [nth'] element of the tail indexed at [n]. *)
-Definition nth'_cons {A : Type} (l : list A) (n : nat) (x : A)
+Definition nth'_cons@{a|} {A : Type@{a}} (l : list A) (n : nat) (x : A)
   (H : n < length l) (H' : n.+1 < length (x :: l))
   : nth' (x :: l) n.+1 H' = nth' l n H.
 Proof.
@@ -407,7 +407,7 @@ Defined.
 
 (** The index of an element in a list is the [n] such that the [nth'] element is the element. *)
 Definition index_of@{i|} {A : Type@{i}} (l : list A) (x : A)
-  : InList x l
+  : InList@{i} x l
     -> sig@{Set i} (fun n : nat => { H : n < length l & nth' l n H = x }).
 Proof.
   induction l as [|a l IHl] using list_ind@{i i}.
@@ -608,7 +608,7 @@ Defined.
 
 (** An element of a [drop] is an element of the original list. *)
 Definition drop_inlist@{i|} {A : Type@{i}} (n : nat) (l : list A) (x : A)
-  : InList x (drop n l) -> InList x l.
+  : InList@{i} x (drop n l) -> InList x l.
 Proof.
   intros H.
   induction l as [|a l IHl] in n, H, x |- * using list_ind@{i i}.
@@ -670,7 +670,7 @@ Definition length_take_leq {A : Type} {n : nat} (l : list A)
 
 (** An element of a [take] is an element of the original list. *)
 Definition take_inlist@{i|} {A : Type@{i}} (n : nat) (l : list A) (x : A)
-  : InList x (take n l) -> InList x l.
+  : InList@{i} x (take n l) -> InList x l.
 Proof.
   intros H.
   induction l as [|a l IHl] in n, H, x |- * using list_ind@{i i}.
@@ -782,7 +782,7 @@ Fixpoint list_filter@{u v|} {A : Type@{u}} (l : list A) (P : A -> Type@{v})
 
 Definition inlist_filter@{u v} {A : Type@{u}} (l : list A)
   (P : A -> Type@{v}) (dec : forall x, Decidable (P x)) (x : A)
-  : iff@{u max(u,v)} (InList x (list_filter l P dec)) (InList x l /\ P x).
+  : iff@{u max(u,v)} (InList@{u} x (list_filter l P dec)) (InList@{u} x l /\ P x).
 Proof.
   simple_list_induction l a l IHl.
   - simpl.
@@ -962,7 +962,7 @@ Proof.
 Defined.
 
 Definition inlist_seq@{} (n : nat) x
-  : InList x (seq n) <~> (x < n).
+  : InList@{0} x (seq n) <~> (x < n).
 Proof.
   simple_induction n n IHn.
   { symmetry; apply equiv_to_empty.
@@ -1033,7 +1033,7 @@ Defined.
 
 (** An element of a repeated list is equal to the repeated element. *)
 Definition inlist_repeat@{i|} {A : Type@{i}} (n : nat) (x y : A)
-  : InList y (repeat x n) -> y = x.
+  : InList@{i} y (repeat x n) -> y = x.
 Proof.
   induction n as [|n IHn].
   1:contradiction.
@@ -1061,7 +1061,7 @@ Defined.
 (** ** Forall *)
 
 (** If a predicate holds for all elements of a list, then the [for_all] predicate holds for the list. *)
-Definition for_all_inlist {A : Type} (P : A -> Type) l
+Definition for_all_inlist@{a p} {A : Type@{a}} (P : A -> Type@{p}) l
   : (forall x, InList x l -> P x) -> for_all P l.
 Proof.
   simple_list_induction l h t IHl; intros H; cbn; trivial; split.
@@ -1074,9 +1074,9 @@ Proof.
 Defined.
 
 (** Conversely, if [for_all P l] then each element of the list satisfies [P]. *)
-Definition inlist_for_all {A : Type} {P : A -> Type}
+Definition inlist_for_all@{i j} {A : Type@{i}} {P : A -> Type@{j}}
   (l : list A)
-  : for_all P l -> forall x, InList x l -> P x.
+  : for_all@{i j} P l -> forall x, InList@{i} x l -> P x.
 Proof.
   simple_list_induction l x l IHl.
   - contradiction.
@@ -1098,8 +1098,8 @@ Proof.
 Defined.
 
 (** A variant of [for_all_map P Q f] where [Q] is [P o f]. *)
-Definition for_all_list_map' {A B : Type} (P : B -> Type) (f : A -> B)
-  : forall l, for_all (P o f) l -> for_all P (list_map f l).
+Definition for_all_list_map'@{i j k} {A : Type@{i}} {B : Type@{j}} (P : B -> Type@{k}) (f : A -> B)
+  : forall l, for_all@{j k} (P o f) l -> for_all P (list_map f l).
 Proof.
   by apply for_all_list_map.
 Defined.
@@ -1166,9 +1166,9 @@ Proof.
 Defined.
 
 (** [for_all] preserves the truncation predicate. *)
-Definition istrunc_for_all {A : Type}
-  {n : trunc_index} (P : A -> Type) (l : list A)
-  : for_all (fun x => IsTrunc n (P x)) l -> IsTrunc n (for_all P l).
+Definition istrunc_for_all@{u v} {A : Type@{u}}
+  {n : trunc_index} (P : A -> Type@{v}) (l : list A)
+  : for_all@{u v} (fun x => IsTrunc n (P x)) l -> IsTrunc@{v} n (for_all P l).
 Proof.
   induction l as [|x l IHl]; simpl.
   - destruct n; exact _.
@@ -1177,10 +1177,10 @@ Proof.
     exact _.
 Defined.
 
-Instance istrunc_for_all' {A : Type} {n : trunc_index}
-  (P : A -> Type) (l : list A)
+Instance istrunc_for_all'@{u v} {A : Type@{u}} {n : trunc_index}
+  (P : A -> Type@{v}) (l : list A)
   `{forall x, IsTrunc n (P x)}
-  : IsTrunc n (for_all P l).
+  : IsTrunc n (for_all@{u v} P l).
 Proof.
   by apply istrunc_for_all, for_all_inlist.
 Defined.
@@ -1197,7 +1197,7 @@ Proof.
 Defined.
 
 (** We can form a list of pairs of a sigma type given a list and a for_all predicate over it. *)
-Definition list_sigma {A : Type} (P : A -> Type) (l : list A) (p : for_all P l)
+Definition list_sigma@{u v} {A : Type@{u}} (P : A -> Type@{v}) (l : list A) (p : for_all@{u v} P l)
   : list {x : A & P x}.
 Proof.
   induction l as [|x l IHl] in p |- *.
@@ -1218,17 +1218,17 @@ Proof.
 Defined.
 
 (** If a predicate [P] is decidable then so is [for_all P]. *)
-Instance decidable_for_all {A : Type} (P : A -> Type)
+Instance decidable_for_all@{a p} {A : Type@{a}} (P : A -> Type@{p})
   `{forall x, Decidable (P x)} (l : list A)
-  : Decidable (for_all P l).
+  : Decidable (for_all@{a p} P l).
 Proof.
   simple_list_induction l x l IHl; exact _.
 Defined.
 
 (** If a predicate [P] is decidable then so is [list_exists P]. *)
-Instance decidable_list_exists {A : Type} (P : A -> Type)
+Instance decidable_list_exists {A : Type@{a}} (P : A -> Type@{p})
   `{forall x, Decidable (P x)} (l : list A)
-  : Decidable (list_exists P l).
+  : Decidable (list_exists@{a p} P l).
 Proof.
   simple_list_induction l x l IHl; exact _.
 Defined.

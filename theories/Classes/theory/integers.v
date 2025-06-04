@@ -67,7 +67,7 @@ Instance integers_to_integers_injective `{Integers Z} `{Integers Z2}
 Proof. exact (to_ring_injective (integers_to_ring Z2 Z) _). Qed.
 
 Instance naturals_to_integers_injective `{Funext} `{Univalence}
-  `{Integers@{i i i i i i i i} Z} `{Naturals@{i i i i i i i i} N}
+  `{Integers@{i i i i i i i i i i} Z} `{Naturals@{i i i} N}
   (f: N -> Z) `{!IsSemiRingPreserving f}
   : IsInjective f.
 Proof.
@@ -130,9 +130,9 @@ Section contents.
 Universe U.
 
 Context `{Funext} `{Univalence}.
-Context (Z : Type@{U}) `{Integers@{U U U U U U U U} Z}.
+Context (Z : Type@{U}) `{Integers@{U U U U U U U U U U} Z}.
 
-Lemma from_int_stmt  (Z':Type@{U}) `{Integers@{U U U U U U U U} Z'}
+Lemma from_int_stmt  (Z':Type@{U}) `{Integers@{U U U U U U U U U U} Z'}
   : forall (P : Rings.Operations -> Type),
   P (Rings.BuildOperations Z') -> P (Rings.BuildOperations Z).
 Proof.

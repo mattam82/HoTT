@@ -12,7 +12,7 @@ Local Open Scope mc_add_scope.
 
 (** * Pushouts of short exact sequences *)
 
-Definition abses_pushout `{Univalence} {A A' B : AbGroup} (f : A $-> A')
+Definition abses_pushout@{a a' b} `{Univalence} {A : AbGroup@{a}} {A' : AbGroup@{a'}} {B : AbGroup@{b}} (f : A $-> A')
   : AbSES B A -> AbSES B A'.
 Proof.
   intro E.

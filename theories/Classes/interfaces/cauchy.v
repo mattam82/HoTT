@@ -80,15 +80,14 @@ Section cauchy.
         exact eq22.
       }
       unfold recip' in eq_recip_22.
-      rewrite eq_recip_22 in isclose, x_close.
+      rewrite eq_recip_22 in isclose, x_close.      
       clear eq22 ap20' eq_recip_22.
       rewrite <- (field_split2 (' (' epsilon))).
       set (eps_recip_2 := (' (' epsilon) * recip' 2 ap20)).
       fold ap20.
       change (' (' epsilon) * recip' 2 ap20) with eps_recip_2.
       unfold recip' in eps_recip_2.
-      set (xMeps2 := x (M (epsilon / 2))).
-      fold xMeps2 in x_close.
+      set (xMeps2 := x (M (epsilon / 2))) in x_close |- *.
       rewrite negate_plus_distr.
       split.
       - apply (strictly_order_reflecting (+ (- x n))).

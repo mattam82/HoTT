@@ -375,28 +375,28 @@ Section Kernel.
   (** We clean up the universe variables here, using only those declared in this Section. *)
   Definition quotient_kernel_factor_general@{|}
     := Eval unfold quotient_kernel_factor_internal in
-      quotient_kernel_factor_internal@{ar' ar abr abr ab abr abr}.
+      quotient_kernel_factor_internal.
 
 End Kernel.
 
 (** A common special case of [quotient_kernel_factor] is when we define [R] to be [f x = f y].  Then universes [r] and [b] are unified. *)
-Definition quotient_kernel_factor@{a b ab ab' | a <= ab, b <= ab, ab < ab'}
+Definition quotient_kernel_factor@{a b ?}
   `{Funext} {A : Type@{a}} {B : Type@{b}} `{IsHSet B} (f : A -> B)
-  : exists (C : Type@{ab}) (e : A -> C) (m : C -> B),
+  : exists (C : Type@{max(a,b)}) (e : A -> C) (m : C -> B),
       IsHSet C * IsSurjection e * IsEmbedding m * (f = m o e).
 Proof.
-  exact (quotient_kernel_factor_general@{a b ab ab' b ab ab}
+  exact (quotient_kernel_factor_general@{a b max(a,b) ab' b ab ab}
            f (fun a b => f a = f b) (fun x y => equiv_idmap)).
 Defined.
 
 (** If we use propositional resizing, we can replace [f x = f y] with a proposition [R x y] in universe [a], so that the universe of [C] is the same as the universe of [A]. *)
-Definition quotient_kernel_factor_small@{a a' b ab | a < a', a <= ab, b <= ab}
+Definition quotient_kernel_factor_small@{a b|}
   `{Funext} `{PropResizing}
   {A : Type@{a}} {B : Type@{b}} `{IsHSet B} (f : A -> B)
   : exists (C : Type@{a}) (e : A -> C) (m : C -> B),
-      IsHSet C * IsSurjection e * IsEmbedding m * (f = m o e).
+      IsHSet C * ReflectiveSubuniverse.IsConnMap@{a} (Tr@{a} (-1)) e * IsEmbedding m * (f = m o e).
 Proof.
-  exact (quotient_kernel_factor_general@{a a a a' b ab ab}
+  exact (quotient_kernel_factor_general@{a a a a+1 b max(a,b) max(a,b)}
            f (fun a b => smalltype@{a b} (f a = f b))
            (fun x y => (equiv_smalltype _)^-1%equiv)).
 Defined.

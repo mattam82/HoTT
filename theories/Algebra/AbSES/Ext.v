@@ -42,7 +42,7 @@ Instance is1bifunctor_ext' `{Univalence}
   := is1bifunctor_postcompose _ _ (bf:=is1bifunctor_abses').
 
 (** [Ext B A] is an abelian group for any [A B : AbGroup]. The proof of commutativity is a bit faster if we separate out the proof that [Ext B A] is a group. *)
-Definition grp_ext `{Univalence} (B A : AbGroup@{u}) : Group.
+Definition grp_ext@{u v} `{Univalence} (B A : AbGroup@{u}) : Group@{v}.
 Proof.
   snapply (Build_Group (Ext B A)).
   - intros E F.
@@ -133,9 +133,9 @@ Proof.
 Defined.
 
 (** We can push out a fixed extension while letting the map vary, and this defines a group homomorphism. *)
-Definition abses_pushout_ext `{Univalence}
+Definition abses_pushout_ext@{u v} `{Univalence}
   {B A G : AbGroup@{u}} (E : AbSES B A)
-  : GroupHomomorphism (ab_hom A G) (ab_ext B G).
+  : GroupHomomorphism (ab_hom A G) (ab_ext@{u v} B G).
 Proof.
   snapply Build_GroupHomomorphism.
   1: exact (fun f => fmap01 (A:=AbGroup^op) Ext' _ f (tr E)).

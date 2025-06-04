@@ -594,7 +594,7 @@ Definition equiv_sig_coind
 
 (** ** Sigmas preserve truncation *)
 
-Instance istrunc_sigma `{P : A -> Type}
+Instance istrunc_sigma@{u u0} {A : Type@{u}} {P : A -> Type@{u0}}
   `{IsTrunc n A} `{forall a, IsTrunc n (P a)}
   : IsTrunc n (sig P) | 100.
 Proof.

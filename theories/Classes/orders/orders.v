@@ -366,7 +366,7 @@ Section full_pseudo_order.
   Qed.
 
   #[export] Instance fullpseudo_fullpartial@{i} : FullPartialOrder Ale Alt
-    := ltac:(first [exact fullpseudo_fullpartial'@{i i Set Set Set}|
+    := ltac:(first [exact fullpseudo_fullpartial'|
                     exact fullpseudo_fullpartial'@{i i}]).
 
   #[export] Instance le_stable : forall x y, Stable (x ≤ y).

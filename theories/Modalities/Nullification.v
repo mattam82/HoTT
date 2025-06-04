@@ -32,13 +32,13 @@ Proof.
     exact (snd (ext' k) (fun u => g u # h' u) k').
 Defined.
 
-Definition ooextendable_over_unit@{i j k l m}
+Definition ooextendable_over_unit@{i j k}
   (A : Type@{i}) (C : Unit -> Type@{j}) (D : forall u, C u -> Type@{k})
-  (ext : ooExtendableAlong@{l l j m} (const_tt A) C)
+  (ext : ooExtendableAlong (const_tt A) C)
   (ext' : forall (c : forall u, C u),
-            ooExtendableAlong (const_tt A) (fun u => (D u (c u))))
+            ooExtendableAlong@{i i k max(i,k)} (const_tt A) (fun u => (D u (c u))))
   : ooExtendableAlong_Over (const_tt A) C D ext
-  := fun n => extendable_over_unit n A C D (ext n) (fun c => ext' c n).
+  := fun n => extendable_over_unit@{i j k max(i,j,k)} n A C D (ext n) (fun c => ext' c n).
 
 #[local] Hint Extern 4 => progress (cbv beta iota) : typeclass_instances.
 
@@ -50,10 +50,10 @@ Proof.
   - intros A.
     (** We take care with universes. *)
     snrefine (reflectsD_from_OO_ind@{i} _ _ _).
-    + intros B B_inO g.
-      refine (Localize_ind@{a i i i} (null_to_local_generators S) A B g _); intros i.
+    + intros B B_inO g. cbn.
+      refine (Localize_ind@{a i i} (null_to_local_generators S) A B g _); intros i.
       apply ooextendable_over_unit; intros c.
-      refine (ooextendable_postcompose@{a a i i i i i i i i}
+      refine (ooextendable_postcompose
                 (fun (_:Unit) => B (c tt)) _ _
                 (fun u => transport B (ap@{Set _} c (path_unit tt u))) _).
       exact (ooextendable_islocal _ i).

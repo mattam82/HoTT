@@ -625,7 +625,7 @@ Definition iff_functor_sum {A A' B B' : Type} (f : A <-> A') (g : B <-> B')
 
 (** ** Unfunctoriality on equivalences *)
 
-Instance isequiv_unfunctor_sum_l {A A' B B' : Type}
+Instance isequiv_unfunctor_sum_l@{a a' b b'} {A : Type@{a}} {A' : Type@{a'}} {B : Type@{b}} {B' : Type@{b'}}
            (h : A + B <~> A' + B')
            (Ha : forall a:A, is_inl (h (inl a)))
            (Hb : forall b:B, is_inr (h (inr b)))
@@ -658,7 +658,7 @@ Definition equiv_unfunctor_sum_l {A A' B B' : Type}
   := Build_Equiv _ _ (unfunctor_sum_l h Ha)
                 (isequiv_unfunctor_sum_l h Ha Hb).
 
-Instance isequiv_unfunctor_sum_r {A A' B B' : Type}
+Instance isequiv_unfunctor_sum_r@{a a' b b'} {A : Type@{a}} {A' : Type@{a'}} {B : Type@{b}} {B' : Type@{b'}}
            (h : A + B <~> A' + B')
            (Ha : forall a:A, is_inl (h (inl a)))
            (Hb : forall b:B, is_inr (h (inr b)))

@@ -262,8 +262,8 @@ Section ClassifyingMaps.
   Defined.
 
   (** The pointed version of [equiv_baut_typeO] above. *)
-  Proposition pequiv_pbaut_typeOp@{u v +} `{Univalence} {F : Type@{u}}
-    : pBAut@{u v} F <~>* [Type_ (subuniverse_merely_equiv F), (F; tr equiv_idmap)].
+  Proposition pequiv_pbaut_typeOp@{u} `{Univalence} {F : Type@{u}}
+    : pBAut@{u} F <~>* [Type_ (subuniverse_merely_equiv F), (F; tr equiv_idmap)].
   Proof.
     snapply Build_pEquiv'; cbn.
     1: exact equiv_baut_typeO.
@@ -271,7 +271,7 @@ Section ClassifyingMaps.
   Defined.
 
   Definition equiv_pmap_pbaut_pfibration `{Univalence} {Y F : pType@{u}}
-    : (Y ->* pBAut@{u v} F) <~> { p : { q : pSlice Y & forall y:Y, merely (hfiber q.2 y <~> F) } &
+    : (Y ->* pBAut@{u} F) <~> { p : { q : pSlice Y & forall y:Y, merely (hfiber q.2 y <~> F) } &
                                       pfiber p.1.2 <~>* F }
     := (equiv_sigma_pfibration_O (subuniverse_merely_equiv F))
          oE pequiv_pequiv_postcompose pequiv_pbaut_typeOp.

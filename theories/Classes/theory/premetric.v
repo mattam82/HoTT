@@ -33,7 +33,7 @@ Class Triangular A `{Closeness A}
   close (e+d) u w.
 
 Class Rounded@{i j} (A:Type@{i}) `{Closeness A}
-  := rounded : forall e u v, iff@{i j j} (close e u v)
+  := rounded : forall e u v, iff@{i j} (close e u v)
     (merely@{j} (sig@{UQ j} (fun d => sig@{UQ j} (fun d' =>
       e = d + d' /\ close d u v)))).
 
@@ -48,7 +48,7 @@ Class PreMetric@{i j} (A:Type@{i}) {Aclose : Closeness A} :=
 Instance premetric_hset@{i j} `{Funext}
   {A:Type@{i} } `{PreMetric@{i j} A} : IsHSet A.
 Proof.
-apply (@HSet.ishset_hrel_subpaths@{j i j} _ (fun x y => forall e, close e x y)).
+apply (@HSet.ishset_hrel_subpaths@{j i} _ (fun x y => forall e, close e x y)).
 - intros x;reflexivity.
 - apply _.
 - apply separated.
@@ -572,7 +572,7 @@ Proof.
 intros e u v xi;split;simpl; apply (non_expanding _),xi.
 Qed.
 
-Definition map2_nonexpanding@{i} := @map2_nonexpanding'@{i i}.
+Definition map2_nonexpanding@{} := @map2_nonexpanding'@{}.
 Arguments map2_nonexpanding {_ _} e x y xi.
 Existing Instance map2_nonexpanding.
 
@@ -592,7 +592,7 @@ intros e u v xi. split;simpl.
 Qed.
 
 (* Coq pre 8.8 produces phantom universes, see coq/coq#6483 **)
-Definition map2_lipschitz@{i} := ltac:(first [exact @map2_lipschitz'@{i i i}|exact @map2_lipschitz'@{i i i i}]).
+Definition map2_lipschitz@{i} := ltac:(first [exact @map2_lipschitz'@{i i}|exact @map2_lipschitz'@{i i i}|exact @map2_lipschitz'@{i i i i}]).
 Arguments map2_lipschitz {_ _} Lf Lg {_ _} e x y xi.
 Existing Instance map2_lipschitz.
 
@@ -614,7 +614,7 @@ split;simpl.
 Qed.
 
 (* Coq pre 8.8 produces phantom universes, see coq/coq#6483 **)
-Definition map2_continuous@{i} := ltac:(first [exact @map2_continuous'@{i i i}|exact @map2_continuous'@{i i i i}]).
+Definition map2_continuous@{i} := ltac:(first [exact @map2_continuous'@{i i}|exact @map2_continuous'@{i i i}|exact @map2_continuous'@{i i i i}]).
 Arguments map2_continuous {_ _ _ _} u e.
 Existing Instance map2_continuous.
 
@@ -772,7 +772,7 @@ apply apart_iff_total_lt in E2. destruct E2 as [E2|E2].
   intros;symmetry;trivial.
 Qed.
 
-Instance Qclose_rounded@{} : Rounded Q.
+Instance Qclose_rounded@{} : Rounded@{UQ UQ} Q.
 Proof.
 intros e q r;split.
 - intros E;apply Qclose_alt in E.
