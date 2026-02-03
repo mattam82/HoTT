@@ -521,7 +521,7 @@ destruct (le_lt_dec c a) as [E2|E2].
 - left;trivial.
 Defined.
 
-Lemma nat_full'@{} : FullPseudoSemiRingOrder@{N N N N N N N} nat_le nat_lt.
+Lemma nat_full'@{} : FullPseudoSemiRingOrder@{N N} nat_le nat_lt.
 Proof.
 split;[exact _|split|].
 - split;try exact _.

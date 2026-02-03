@@ -300,7 +300,7 @@ Context `{Funext} `{Univalence} (N : Type@{UN})
 
 (* Add Ring SR : (rings.stdlib_semiring_theory SR). *)
 Instance N_fullpartial : FullPartialOrder Ale Alt
-  := fullpseudo_fullpartial@{UN UN UN UN Ularge}.
+  := fullpseudo_fullpartial@{UN UN Ularge}.
 
 Definition Z@{} : Type@{UN} := @quotient _ PairT.equiv@{UN UNalt} _.
 
@@ -843,7 +843,7 @@ Instance Zmult_strong_ext_l@{} : forall z : Z, StrongExtensionality (z *.)
                   exact Zmult_strong_ext_l'@{}]).
 
 Instance Z_full_pseudo_srorder@{}
-  : FullPseudoSemiRingOrder@{UN UN UN UN UN UN UN} Zle Zlt.
+  : FullPseudoSemiRingOrder@{UN UN} Zle Zlt.
 Proof.
 pose proof Z_ring.
 first [apply from_full_pseudo_ring_order@{UN UN UN UN UN UN UN Ularge}|
@@ -919,7 +919,7 @@ rewrite 2!(naturals_initial (h:=Compose h (cast N Z))).
 trivial.
 Qed.
 
-#[export] Instance Z_integers@{} : Integers@{UN UN UN UN UN UN UN UN UN UN} Z.
+#[export] Instance Z_integers@{} : Integers@{UN UN UN} Z.
 Proof.
 split;try exact _.
 - exact Z_ring.
@@ -1047,8 +1047,7 @@ red. apply (Z_rect _ Z_abs_def).
 exact Z_abs_respects'.
 Qed.
 
-#[export] Instance Z_abs@{} : IntAbs@{UN UN UN UN UN UN UN UN UN UN UN
-  UN UN UN} Z N
+#[export] Instance Z_abs@{} : IntAbs@{UN UN UN UN UN UN} Z N
   := Z_abs'.
 
 Notation n_to_z := (naturals_to_semiring N Z).
