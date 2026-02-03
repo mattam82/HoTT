@@ -10,7 +10,7 @@ Arguments naturals_to_semiring A {_} B {_ _ _ _ _} _.
 Class Naturals@{a ar b} (A : Type@{a}) {Aap:Apart A} {Aplus Amult Azero Aone Ale Alt}
   `{U: NaturalsToSemiRing A} :=
   { naturals_ring :: @IsSemiCRing A Aplus Amult Azero Aone
-  ; naturals_order :: FullPseudoSemiRingOrder@{a ar a a ar ar ar} Ale Alt
+  ; naturals_order :: FullPseudoSemiRingOrder@{a ar} Ale Alt
   ; naturals_to_semiring_mor :: forall {B : Type@{b}} `{IsSemiCRing B},
     IsSemiRingPreserving (naturals_to_semiring@{a b} A B)
   ; naturals_initial: forall {B : Type@{b}} `{IsSemiCRing B} {h : A -> B} `{!IsSemiRingPreserving h} x,

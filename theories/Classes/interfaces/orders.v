@@ -61,7 +61,7 @@ Class StrictOrder `(Alt : Lt A) :=
 
 (** The constructive notion of a total strict total order.
    We will prove that [(<)] is in fact a [StrictOrder]. *)
-Class PseudoOrder `{Aap : Apart A} (Alt : Lt A) :=
+Class PseudoOrder `{Aap : Apart@{u ur} A} (Alt : Lt@{u ur} A) :=
 { pseudo_order_apart : IsApart A
   ; pseudo_order_mere_lt :: is_mere_relation A lt
   ; pseudo_order_antisym : forall x y, ~(x < y /\ y < x)
@@ -70,7 +70,7 @@ Class PseudoOrder `{Aap : Apart A} (Alt : Lt A) :=
 
 (** A partial order [(≤)] with a corresponding [(<)]. We will prove that [(<)] is in fact
   a [StrictOrder] *)
-Class FullPartialOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
+Class FullPartialOrder `{Aap : Apart@{u ur} A} (Ale : Le@{u ur} A) (Alt : Lt@{u ur} A) :=
   { strict_po_apart : IsApart A
   ; strict_po_mere_lt : is_mere_relation A lt
   ; strict_po_po :: PartialOrder (≤)
@@ -79,7 +79,7 @@ Class FullPartialOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
 
 (** A pseudo order [(<)] with a corresponding [(≤)]. We will prove that [(≤)] is in fact
   a [PartialOrder]. *)
-Class FullPseudoOrder `{Aap : Apart A} (Ale : Le A) (Alt : Lt A) :=
+Class FullPseudoOrder `{Aap : Apart@{u ur} A} (Ale : Le@{u ur} A) (Alt : Lt@{u ur} A) :=
   { fullpseudo_le_hprop :: is_mere_relation A Ale
   ; full_pseudo_order_pseudo :: PseudoOrder Alt
   ; le_iff_not_lt_flip : forall x y, x ≤ y <-> ~(y < x) }.
@@ -98,7 +98,8 @@ Section order_maps.
 End order_maps.
 
 Section srorder_maps.
-  Context {A B : Type} {Alt: Lt A} {Blt: Lt B} (f : A -> B).
+  Universe u ur.
+  Context {A B : Type@{u}} {Alt: Lt@{u ur} A} {Blt: Lt@{u ur} B} (f : A -> B).
 
   Class StrictlyOrderPreserving := strictly_order_preserving
     : forall x y, (x < y -> f x < f y).
@@ -140,17 +141,17 @@ Class StrictSemiRingOrder `{Plus A} `{Mult A}
   ; pos_mult_compat : forall x y, PropHolds (0 < x) -> PropHolds (0 < y) ->
                              PropHolds (0 < x * y) }.
 
-Class PseudoSemiRingOrder `{Apart A} `{Plus A}
-    `{Mult A} `{Zero A} `{One A} (Alt : Lt A) :=
+Class PseudoSemiRingOrder `{Apart@{u ur} A} `{Plus A}
+    `{Mult A} `{Zero A} `{One A} (Alt : Lt@{u ur} A) :=
   { pseudo_srorder_strict :: PseudoOrder Alt
   ; pseudo_srorder_partial_minus : forall x y, ~(y < x) -> exists z, y = x + z
-  ; pseudo_srorder_plus :: forall z, StrictOrderEmbedding (z +)
+  ; pseudo_srorder_plus :: forall z, StrictOrderEmbedding@{u ur} (z +)
   ; pseudo_srorder_mult_ext :: StrongBinaryExtensionality (.*.)
   ; pseudo_srorder_pos_mult_compat : forall x y, PropHolds (0 < x) -> PropHolds (0 < y) ->
                                             PropHolds (0 < x * y) }.
 
-Class FullPseudoSemiRingOrder `{Apart A} `{Plus A}
-    `{Mult A} `{Zero A} `{One A} (Ale : Le A) (Alt : Lt A) :=
+Class FullPseudoSemiRingOrder `{Apart@{u ur} A} `{Plus A}
+    `{Mult A} `{Zero A} `{One A} (Ale : Le@{u ur} A) (Alt : Lt@{u ur} A) :=
   { full_pseudo_srorder_le_hprop :: is_mere_relation A Ale
   ; full_pseudo_srorder_pso :: PseudoSemiRingOrder Alt
   ; full_pseudo_srorder_le_iff_not_lt_flip : forall x y, x ≤ y <-> ~(y < x) }.
@@ -162,7 +163,7 @@ Hint Extern 7 (PropHolds (0 < _ * _)) =>
 #[export]
 Hint Extern 7 (PropHolds (0 ≤ _ * _)) =>
   eapply @nonneg_mult_compat : typeclass_instances.
-
+ 
 (*
 Alternatively, we could have defined the standard notion of a RingOrder:
 

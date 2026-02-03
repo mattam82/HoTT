@@ -79,7 +79,7 @@ Lemma int_abs_negate x :
   int_abs Z N (-x) = int_abs Z N x.
 Proof.
 destruct (int_abs_spec x) as [[_ E]|[_ E]].
-- path_via (int_abs Z N (- f (int_abs Z N x))). 
+- path_via (int_abs Z N (- f (int_abs Z N x))).
   * rewrite E. reflexivity.
   * apply int_abs_negate_nat.
 - rewrite <-E. apply int_abs_nat.
