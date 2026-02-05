@@ -380,12 +380,12 @@ Section Kernel.
 End Kernel.
 
 (** A common special case of [quotient_kernel_factor] is when we define [R] to be [f x = f y].  Then universes [r] and [b] are unified. *)
-Definition quotient_kernel_factor@{a b ?}
+Definition quotient_kernel_factor@{a b}
   `{Funext} {A : Type@{a}} {B : Type@{b}} `{IsHSet B} (f : A -> B)
   : exists (C : Type@{max(a,b)}) (e : A -> C) (m : C -> B),
-      IsHSet C * IsSurjection e * IsEmbedding m * (f = m o e).
+      IsHSet C * IsSurjection@{max(a,b)} e * IsEmbedding@{max(a,b) b} m * (f = m o e).
 Proof.
-  exact (quotient_kernel_factor_general@{a b max(a,b) ab' b ab ab}
+  exact (quotient_kernel_factor_general@{a b max(a,b) max(a+1,b+1) b max(a,b) max(a,b)}
            f (fun a b => f a = f b) (fun x y => equiv_idmap)).
 Defined.
 

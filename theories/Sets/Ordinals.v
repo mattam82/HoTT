@@ -562,8 +562,8 @@ Instance lt_Ordinal@{carrier relation} `{PropResizing}
   : Lt Ordinal@{carrier relation}
   := fun A B => exists b : B, A = ↓b.
 
-Instance is_mere_relation_lt_on_Ordinal `{Univalence} `{PropResizing}
-  : is_mere_relation Ordinal lt_Ordinal.
+Instance is_mere_relation_lt_on_Ordinal@{car rel} `{Univalence} `{PropResizing}
+  : is_mere_relation Ordinal@{car rel} lt_Ordinal.
 Proof.
   intros A B.
   apply ishprop_sigma_disjoint.
@@ -600,8 +600,8 @@ Proof.
     apply initial_segment_property.
 Qed.
 
-Instance Ordinal_is_ordinal `{PropResizing} `{Univalence}
-  : IsOrdinal Ordinal (<).
+Instance Ordinal_is_ordinal@{car rel} `{PropResizing} `{Univalence}
+  : IsOrdinal Ordinal@{car rel} (<).
 Proof.
   constructor.
   - exact _.
@@ -820,7 +820,7 @@ Qed.
 (** Any type equivalent to an ordinal is an ordinal, and we can change the universe that the relation takes values in. *)
 
 (* TODO: Should factor this into two results:  (1) Anything equivalent to an ordinal is an ordinal (with the relation landing in the same universe for both).  (2) Under PropResizing, the universe that the relation takes values in can be changed. *)
-Definition resize_ordinal@{i j ?} `{PropResizing} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B)
+Definition resize_ordinal@{i j +} `{PropResizing} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B)
   : Ordinal@{j _}.
 Proof.
   exists C (fun c1 c2 : C => smalltype (g c1 < g c2)).
@@ -833,7 +833,7 @@ Proof.
       * apply eisretr.
 Defined.
 
-Lemma resize_ordinal_iso@{i j ?} `{PropResizing} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B)
+Lemma resize_ordinal_iso@{i j +} `{PropResizing} (B : Ordinal@{i _}) (C : Type@{j}) (g : C <~> B)
   : Isomorphism (resize_ordinal B C g) B.
 Proof.
   exists g. intros a a'. cbn. split; apply equiv_smalltype.

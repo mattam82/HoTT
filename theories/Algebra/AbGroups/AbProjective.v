@@ -16,7 +16,7 @@ From HoTT Require Import Basics Types AbelianGroup AbPullback
        P ---> B
           f
 *)
-Class IsAbProjective@{u ?} (P : AbGroup@{u}) : Type :=
+Class IsAbProjective@{u} (P : AbGroup@{u}) : Type :=
   isabprojective : forall (A B : AbGroup@{u}), forall (e : A $-> B),
     forall (f : P $-> B), IsSurjection e -> merely (exists l : P $-> A, e $o l == f).
 

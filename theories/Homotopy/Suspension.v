@@ -107,7 +107,7 @@ Defined.
 
 (* ** Non-dependent eliminator. *)
 
-Definition Susp_rec {X : Type@{u}} {Y : Type@{u0}}
+Definition Susp_rec@{u u0|} {X : Type@{u}} {Y : Type@{u0}}
   (H_N H_S : Y) (H_merid : X -> H_N = H_S)
   : Susp@{u} X -> Y
   := Pushout_rec (f:=const_tt X) (g:=const_tt X) Y (Unit_ind H_N) (Unit_ind H_S) H_merid.

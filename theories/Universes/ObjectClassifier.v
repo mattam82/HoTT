@@ -62,7 +62,7 @@ Defined.
 (** ** Classifying bundles with specified fiber *)
 
 (** Bundles over [B] with fiber [F] correspond to pointed maps into the universe pointed at [F]. *)
-Proposition equiv_sigma_fibration_p@{u v ?} `{Univalence} {Y : pType@{u}} {F : Type@{u}}
+Proposition equiv_sigma_fibration_p@{u v} `{Univalence} {Y : pType@{u}} {F : Type@{u}}
   : (Y ->* [Type@{u}, F]) <~> { p : Slice@{u} Y & hfiber p.2 (point Y) <~> F }.
 Proof.
   refine (_ oE (issig_pmap _ _)^-1).
@@ -114,7 +114,7 @@ Defined.
 (** We consider a pointed base [Y], and the universe of O-local types [Type_ O] pointed at some O-local type [F]. *)
 
 (** Pointed maps into [Type_ O] correspond to O-local bundles with fiber [F] over the base point of [Y]. *)
-Proposition equiv_sigma_fibration_Op@{u v ?} `{Univalence} {O : Subuniverse}
+Proposition equiv_sigma_fibration_Op@{u v} `{Univalence} {O : Subuniverse}
             {Y : pType@{u}} {F : Type@{u}} `{inO : In O F}
   : (Y ->* [Type_ O, (F; inO)])
       <~> { p : { q : Slice@{u} Y & MapIn O q.2 } & hfiber p.1.2 (point Y) <~> F }.
@@ -128,7 +128,7 @@ Proof.
 Defined.
 
 (** When the base [Y] is connected, the fibers being O-local follow from the fact that the fiber [F] over the base point is. *)
-Proposition equiv_sigma_fibration_Op_connected@{u v ?} `{Univalence} {O : Subuniverse}
+Proposition equiv_sigma_fibration_Op_connected@{u v +} `{Univalence} {O : Subuniverse}
             {Y : pType@{u}} `{IsConnected 0 Y} {F : Type@{u}} `{inO : In O F}
   : (Y ->* [Type_ O, (F; inO)])
        <~> { p : Slice@{u} Y & hfiber p.2 (point Y) <~> F }.
@@ -158,7 +158,7 @@ Proof.
 Defined.
 
 (** When moreover the base [Y] is connected, the right-hand side is exactly the type of pointed fiber sequences, since the fibers being O-local follow from [F] being O-local and [Y] connected. *)
-Definition equiv_sigma_pfibration_O_connected@{u ?} `{Univalence} (O : Subuniverse)
+Definition equiv_sigma_pfibration_O_connected@{u +} `{Univalence} (O : Subuniverse)
           {Y F : pType@{u}} `{IsConnected 0 Y} `{inO : In O F}
   : (Y ->* [Type_ O, (pointed_type F; inO)])
       <~> { p : pSlice@{u} Y & pfiber p.2 <~>* F }

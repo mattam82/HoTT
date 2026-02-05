@@ -7,7 +7,7 @@ Class NaturalsToSemiRing@{i j} (A : Type@{i}) :=
 
 Arguments naturals_to_semiring A {_} B {_ _ _ _ _} _.
 
-Class Naturals@{a ar b} (A : Type@{a}) {Aap:Apart A} {Aplus Amult Azero Aone Ale Alt}
+Class Naturals@{a ar b} (A : Type@{a}) {Aap:Apart@{a ar} A} {Aplus Amult Azero Aone Ale Alt}
   `{U: NaturalsToSemiRing A} :=
   { naturals_ring :: @IsSemiCRing A Aplus Amult Azero Aone
   ; naturals_order :: FullPseudoSemiRingOrder@{a ar} Ale Alt

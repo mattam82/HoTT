@@ -152,7 +152,7 @@ Defined.
 
 (** The [i]-th projection from the [I]-indexed product of 0-groupoids. *)
 
-Definition prod_0gpd_pr@{u ob h ?} {I : Type@{u}} {G : I -> ZeroGpd@{ob h}}
+Definition prod_0gpd_pr@{u ob h} {I : Type@{u}} {G : I -> ZeroGpd@{ob h}}
   : forall i, prod_0gpd@{u ob h} I G $-> G i.
 Proof.
   intros i.

@@ -312,7 +312,7 @@ Definition Z_path {x y} : PairT.equiv x y -> Z_of_pair x = Z_of_pair y
   := related_classes_eq _.
 
 Definition related_path {x y} : Z_of_pair x = Z_of_pair y -> PairT.equiv x y
-  := classes_eq_related@{UN UN UN UN UN} _ _ _.
+  := classes_eq_related@{UN UN} _ _ _.
 
 Definition Z_rect@{i} (P : Z -> Type@{i}) {sP : forall x, IsHSet (P x)}
   (dclass : forall x : PairT.T N, P (' x))
@@ -588,7 +588,7 @@ Instance Zmult_nonneg@{} : forall x y : Z, PropHolds (0 â‰¤ x) -> PropHolds (0 â
   := ltac:(first [exact Zmult_nonneg'@{Ularge Ularge Ularge}|
                   exact Zmult_nonneg']).
 
-#[export] Instance Z_order@{} : SemiRingOrder@{UN UN UN UN UN} Zle.
+#[export] Instance Z_order@{} : SemiRingOrder@{UN UN} Zle.
 Proof. pose proof Z_ring; apply rings.from_ring_order; exact _. Qed.
 
 (* Make this computable? Would need to compute through Z_ind2. *)

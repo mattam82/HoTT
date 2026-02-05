@@ -54,7 +54,7 @@ Defined.
 
 Section cones.
 Check Type.
-  Lemma isepi'_contr_cone@{a b} `{Funext} {A : HSet@{a}} {B : HSet@{b}} (f : A -> B) : isepi'@{b a a} f -> Contr (setcone@{a b max(a,b)} f).
+  Lemma isepi'_contr_cone@{a b} `{Funext} {A : HSet@{a}} {B : HSet@{b}} (f : A -> B) : isepi'@{b a a} f -> Contr (setcone@{a b} f).
   Proof.
     intros hepi.
     apply (Build_Contr _ (setcone_point _)).
