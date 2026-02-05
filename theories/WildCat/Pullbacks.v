@@ -30,7 +30,7 @@ Proof.
 Defined.
 
 (** A pullback is an object completing [f] and [g] to a commuting square such that the map above is an equivalence of 0-groupoids for each [z].  The name [Pullback] is used for the construction in Limits.Pullback, so we use CatPullback here. *)
-Class CatPullback {A : Type} `{Is1Cat A} {a b c : A} (f : a $-> c) (g : b $-> c)
+Class CatPullback@{a ar ar'} {A : Type@{a}} `{Is1Cat@{a ar ar'} A} {a b c : A} (f : a $-> c) (g : b $-> c)
   := Build_CatPullback' {
     cat_pb : A;
     cat_pb_pr1 : cat_pb $-> a;

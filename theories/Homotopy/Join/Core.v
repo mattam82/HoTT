@@ -21,10 +21,10 @@ Section Join.
     := Pushout@{max(i,j) i j max(i,j)} (@fst A B) (@snd A B).
 
   Definition joinl@{i j} {A : Type@{i}} {B : Type@{j}} : A -> Join@{i j} A B
-    := fun a => @pushl@{max(i,j) i j max(i,j)} (A*B) A B fst snd a.
+    := fun a => @pushl@{max(i,j) i j} (A*B) A B fst snd a.
 
   Definition joinr@{i j} {A : Type@{i}} {B : Type@{j}} : B -> Join A B
-    := fun b => @pushr@{max(i,j) i j max(i,j)} (A*B) A B fst snd b.
+    := fun b => @pushr@{max(i,j) i j} (A*B) A B fst snd b.
 
   Definition jglue {A B} a b : joinl a = joinr b
     := @pglue (A*B) A B fst snd (a , b).

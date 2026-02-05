@@ -20,9 +20,9 @@ Module Export CumulativeHierarchy.
 Private Inductive V@{U} : Type@{U+1} :=
 | set {A : Type@{U}} (f : A -> V) : V.
 
-Axiom setext@{a r U' U} : forall {A B : Type@{a}} (R : A -> B -> HProp@{r})
+Axiom setext@{a r U} : forall {A B : Type@{a}} (R : A -> B -> HProp@{r})
   (bitot_R : bitotal R) (h : SPushout@{a a r max(a,r)} R -> V@{U}),
-set (h o (spushl R)) = set (h o (spushr R)).
+  set (h o (spushl R)) = set (h o (spushr R)) :> V@{U}.
 
 Axiom ishset_V : IsHSet V.
 Existing Instance ishset_V.
@@ -33,9 +33,9 @@ Fixpoint V_ind@{U' U u | U < U'} (P : V@{U} -> Type@{u})
   (H_set : forall (A : Type@{U}) (f : A -> V) (H_f : forall a : A, P (f a)), P (set f))
   (H_setext : forall (A B : Type@{U}) (R : A -> B -> HProp@{U}) (bitot_R : bitotal R)
     (h : SPushout R -> V) (H_h : forall x : SPushout R, P (h x)),
-    transport@{U' u} _ (setext@{U U U' U} R bitot_R h) (H_set A (h o spushl R) (H_h oD spushl R))
+    transport@{U' u} _ (setext@{U U U} R bitot_R h) (H_set A (h o spushl R) (H_h oD spushl R))
       = H_set B (h o spushr R) (H_h oD spushr R) )
-  (v : V)
+  (v : V@{U})
 : P v
 := (match v with
      | set A f => fun _ _ => H_set A f (fun a => V_ind P H_0trunc H_set H_setext (f a))

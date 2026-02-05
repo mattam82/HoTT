@@ -659,7 +659,7 @@ Defined.
 (** Any inclusion [i : A $-> E] determines a short exact sequence by quotienting. *)
 Definition abses_from_inclusion@{u} `{Univalence}
   {A E : AbGroup@{u}} (i : A $-> E) `{IsEmbedding i}
-  : AbSES (QuotientAbGroup@{u u u} E (grp_image_embedding i)) A.
+  : AbSES (QuotientAbGroup@{u u} E (grp_image_embedding i)) A.
 Proof.
   srapply (Build_AbSES E i).
   1: exact grp_quotient_map.

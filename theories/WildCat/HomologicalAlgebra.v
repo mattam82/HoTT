@@ -13,8 +13,8 @@ Local Open Scope mc_add_scope.
 (** ** The weak four lemmas *)
 
 Section FourLemma.
-
-  Context {A : Type} `{IsAbEpiStable A}.
+  Universes a b c.
+  Context {A : Type@{a}} `{IsAbEpiStable@{a b c} A}.
 
   Context {B C D E B' C' D' E' : A}
     (bc : B $-> C) (cd : C $-> D) (de : D $-> E)
@@ -36,7 +36,7 @@ Section FourLemma.
   The common assumptions are that the map [B $-> B'] is epi, the map [E $-> E'] is mono, and the sequences [C $-> D] + [D $-> E] and [B' $-> C'] + [C' $-> D'] are exact. *)
 
   (** If in addition the composite of [C' $-> D'] and [D' $-> C'] is zero and the map [D $-> D'] is epi, then the map [C $-> C'] is epi. *)
-  Definition weak_four_epi {complex_cde' : de' $o cd' $== 0} `{!Epic i}
+  Definition weak_four_epi@{} {complex_cde' : de' $o cd' $== 0} `{!Epic i}
     : Epic h.
   Proof.
     (* To show that [h : C $-> C'] is epi, we must show that an arbitrary generalized element [c' : elt P C'] lifts along [h : C $-> C']. *)

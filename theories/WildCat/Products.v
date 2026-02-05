@@ -466,7 +466,7 @@ Proof.
 Defined.
 
 (** As a special case of the product functor, restriction along [Bool_rec A] yields bifunctoriality of [cat_binprod]. *)
-Instance is0bifunctor_cat_binprod@{u ?} {A : Type@{u}} `{HasBinaryProducts A}
+Instance is0bifunctor_cat_binprod@{u +} {A : Type@{u}} `{HasBinaryProducts A}
   : Is0Bifunctor (fun x y => cat_binprod x y).
 Proof.
   pose (p:=@has_products _ _ _ _ _ _ hasproductsbool_hasbinaryproducts).
@@ -603,7 +603,7 @@ Proof.
     1-3: napply cat_binprod_beta_pr2.
 Defined.
 
-Definition cat_binprod_fmap11_corec@{u u0 u1 ?} {A : Type@{u}}
+Definition cat_binprod_fmap11_corec@{u u0 u1 +} {A : Type@{u}}
   `{Is1Cat@{u u0 u1} A, !HasBinaryProducts A} {v w x y z : A}
   (f : w $-> y) (g : x $-> z) (h : v $-> w) (i : v $-> x)
   : fmap11 (fun x y => cat_binprod x y) f g $o cat_binprod_corec h i

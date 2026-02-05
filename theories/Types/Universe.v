@@ -490,7 +490,7 @@ Definition equiv_induction'_comp (P : forall U V, U <~> V -> Type)
   : equiv_induction' P didmap U U (equiv_idmap U) = didmap U
   := (equiv_ind_comp (P U U) _ 1).
 
-Theorem equiv_induction_inv@{u v w?} {U : Type@{u}} (P : forall V : Type@{v}, V <~> U -> Type@{w})
+Theorem equiv_induction_inv@{u v w} {U : Type@{u}} (P : forall V : Type@{v}, V <~> U -> Type@{w})
   : (P U (equiv_idmap U)) -> (forall (V : Type@{v}) (w : V <~> U), P V w).
 Proof.
   intros H0 V.

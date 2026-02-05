@@ -400,7 +400,7 @@ Defined.
 
 Lemma classes_eq_related@{} : forall q r, ' q = ' r -> equiv q r.
 Proof.
-apply classes_eq_related@{UR UR UR UR UR}; apply _.
+apply classes_eq_related@{UR UR}; apply _.
 Qed.
 
 Lemma class_neq@{} : forall q r, ~ (equiv q r) -> ' q <> ' r.

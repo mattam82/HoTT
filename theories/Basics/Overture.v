@@ -271,12 +271,8 @@ Arguments idpath {A a} , [A] a.
 
 #[export] Hint Resolve idpath : core.
 
-Definition paths_ind@{a p} [A : Type@{a}] (a : A) (P : forall a0 : A, paths a a0 -> Type@{p}) (f : P a idpath) 
-  (y : A) (p : paths a y) : P y p :=
-  match p with
-  | idpath => f
-  end.
 
+Scheme paths_ind := Induction for paths Sort Type.
 Arguments paths_ind [A] a P f y p : rename.
 Scheme paths_rec := Minimality for paths Sort Type.
 Arguments paths_rec [A] a P f y p : rename.
