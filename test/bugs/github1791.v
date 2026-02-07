@@ -10,7 +10,7 @@ Check transpose@{u1 u2 u3}.
 
 (** WildCat/Yoneda.v: *)
 
-Check opyon_equiv_0gpd@{u1 u2 u3 u4 u5}.
+Check opyon_equiv_0gpd@{u1 u2 u3 u4 u5 u6 u7}.
 
 (** Join/Core.v: *)
 
