@@ -54,16 +54,16 @@ Section GrpPullback.
     apply path_ishprop.
   Defined.
 
-  Local Instance ismonoid_grp_pullback : IsMonoid (Pullback f g) := {}.
+  Local Instance ismonoid_grp_pullback@{} : IsMonoid (Pullback f g) := {}.
 
-  Local Instance grp_pullback_inverse : Inverse (Pullback f g).
+  Local Instance grp_pullback_inverse@{} : Inverse (Pullback f g).
   Proof.
     intros [b [c p]].
     refine (b^; c^; grp_homo_inv f b @ _ @ (grp_homo_inv g c)^).
     exact (ap (^) p).
   Defined.
 
-  Local Instance grp_pullback_leftinverse : LeftInverse (.*.) (^) mon_unit.
+  Local Instance grp_pullback_leftinverse@{} : LeftInverse (.*.) (^) mon_unit.
   Proof.
     unfold LeftInverse.
     intros [b [c p]].
@@ -74,7 +74,7 @@ Section GrpPullback.
     apply path_ishprop.
   Defined.
 
-  Local Instance grp_pullback_rightinverse : RightInverse (.*.) (^) mon_unit.
+  Local Instance grp_pullback_rightinverse@{} : RightInverse (.*.) (^) mon_unit.
   Proof.
     intros [b [c p]].
     unfold grp_pullback_sgop; simpl.
@@ -84,7 +84,7 @@ Section GrpPullback.
     apply path_ishprop.
   Defined.
 
-  #[export] Instance isgroup_grp_pullback : IsGroup (Pullback f g) := {}.
+  #[export] Instance isgroup_grp_pullback@{} : IsGroup (Pullback f g) := {}.
 
   Definition grp_pullback : Group
     := Build_Group (Pullback f g) _ _ _ _.

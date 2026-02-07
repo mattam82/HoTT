@@ -4,6 +4,7 @@ Require Import Metatheory.Core Metatheory.FunextVarieties.
 
 Generalizable All Variables.
 
+Set Kernel Cumulativity Zeta.
 (** * Univalence Implies Functional Extensionality *)
 
 Section UnivalenceImpliesFunext.

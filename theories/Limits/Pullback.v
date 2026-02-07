@@ -4,6 +4,8 @@ Require Import Diagrams.CommutativeSquares.
 
 Local Open Scope path_scope.
 
+Local Set Kernel Cumulativity Zeta.
+
 (** * Pullbacks *)
 
 (** The pullback as an object *)
