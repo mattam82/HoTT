@@ -664,8 +664,8 @@ Ltac issig :=
 
 (** We show how the tactic works in a couple of examples. *)
 
-Definition issig_equiv (A B : Type)
-  : {f : A -> B & IsEquiv f} <~> Equiv A B.
+Definition issig_equiv@{i j k | i <= k, j <= k} (A : Type@{i}) (B : Type@{j})
+  : @sig@{k k} (A -> B) IsEquiv <~> Equiv A B.
 Proof.
   issig.
 Defined.

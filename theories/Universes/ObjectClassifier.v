@@ -67,7 +67,7 @@ Proposition equiv_sigma_fibration_p@{u v} `{Univalence} {Y : pType@{u}} {F : Typ
 Proof.
   refine (_ oE (issig_pmap _ _)^-1).
   srapply (equiv_functor_sigma' equiv_sigma_fibration); intro P; cbn.
-  refine (_ oE (equiv_path_universe@{u u} _ _)^-1%equiv).
+  refine (_ oE (equiv_path_universe@{u} _ _)^-1%equiv).
   refine (equiv_functor_equiv _ equiv_idmap).
   apply hfiber_fibration.
 Defined.

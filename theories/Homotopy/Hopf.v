@@ -140,7 +140,7 @@ Defined.
 Definition pequiv_pfiber_loops_susp_counit_join@{u v | u < v} `{Univalence} (X : pType@{u})
   : pfiber (loop_susp_counit X) <~>* pjoin (loops X) (loops X).
 Proof.
-  snrefine (pequiv_hopf_total_join@{v u u u u u u u} (loops X) o*E _).
+  snrefine (pequiv_hopf_total_join (loops X) o*E _).
   2: exact ishspace_loops.
   2,3: exact _.
   snapply Build_pEquiv'.

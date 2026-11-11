@@ -31,6 +31,9 @@ Global Unset Strict Universe Declaration.
 (** This command makes it so that when we say something like [IsHSet nat] we get [IsHSet@{i} nat] instead of [IsHSet@{Set} nat]. *)
 Global Unset Universe Minimization ToSet.
 
+(** This command makes the universes that are only bounded from below, e.g. those of the cumulative instances of definitions, minimal even when they occur invariantly, as was the case before definitions became cumulative.  Otherwise each definition would keep one universe per such instance, and the universe constraints of later proofs would pile up. *)
+Global Set Universe Minimization Unbounded.
+
 (** ** Primitive Projections *)
 
 Global Set Primitive Projections.

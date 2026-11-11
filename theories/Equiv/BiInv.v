@@ -108,8 +108,9 @@ Proof.
   srapply (contr_equiv' _ (prod_isbiinv A B)).
 Defined.
 
-Definition equiv_isbiinv_isequiv `{Funext} {A B : Type} (f : A -> B)
-  : IsBiInv f <~> IsEquiv f.
+Definition equiv_isbiinv_isequiv@{i j k | i <= k, j <= k} `{Funext}
+  {A : Type@{i}} {B : Type@{j}} (f : A -> B)
+  : Equiv@{k k} (IsBiInv f) (IsEquiv f).
 Proof.
   apply equiv_iff_hprop_uncurried, iff_isbiinv_isequiv.
 Defined.

@@ -869,7 +869,7 @@ Section JoinTrunc.
     unfold NullHomotopy in *; destruct h as [[c g] h].
     exists (c tt).
     snapply Join_ind.
-    - intros a; cbn beta. exact (ap10@{Set _ _} (h a)..1 tt).
+    - intros a; cbn beta. exact (ap10@{Set _} (h a)..1 tt).
     - intros b; cbn beta. exact (g b)^.
     - intros a b.
       transport_paths Fl.

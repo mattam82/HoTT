@@ -4,6 +4,9 @@ From HoTT Require Import Spaces.Card.
 
 From HoTT.Sets Require Import Ordinals Powers.
 
+(** The universes of the Hartogs number are controlled explicitly below: do not identify the unbounded ones. *)
+Local Unset Universe Minimization Unbounded.
+
 Close Scope trunc_scope.
 
 (** This file contains a construction of the Hartogs number. *)

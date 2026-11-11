@@ -188,7 +188,7 @@ Definition cyclic' `{Funext} (n : nat) `{IsEmbedding (Z1_mul_nat n)}
 Local Definition isexact_ext_cyclic_ab_iii@{u v} `{Univalence}
   (n : nat) `{IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
   : IsExact@{v v v v} (Tr (-1))
-      (fmap10 (A:=Group^op) ab_hom (Z1_mul_nat@{u u u u u u} n) A)
+      (fmap10 (A:=Group^op) ab_hom (Z1_mul_nat@{u} n) A)
       (abses_pushout_ext@{u v} (abses_from_inclusion (Z1_mul_nat n)))
   := isexact_ext_contra_sixterm_iii
        (abses_from_inclusion (Z1_mul_nat n)).
@@ -198,7 +198,7 @@ Local Definition ext_cyclic_exact@{u v +} `{Univalence}
   (n : nat) `{IsEmbedding (Z1_mul_nat n)} {A : AbGroup@{u}}
   : IsExact@{v v v v} (Tr (-1))
       (ab_mul (A:=A) n)
-      (abses_pushout_ext@{u v} (abses_from_inclusion (Z1_mul_nat@{u u u u u u} n))
+      (abses_pushout_ext@{u v} (abses_from_inclusion (Z1_mul_nat@{u} n))
          o* (pequiv_groupisomorphism@{u u} (equiv_Z1_hom@{u} A))^-1*).
 Proof.
   (* we first move [equiv_Z1_hom] across the total space *)
@@ -222,9 +222,9 @@ Defined.
 
 (** The main result of this section. *)
 Theorem ext_cyclic_ab@{u +} `{Univalence}
-  (n : nat) `{emb : IsEmbedding (Z1_mul_nat@{u u u u u u} n)} {A : AbGroup@{u}}
+  (n : nat) `{emb : IsEmbedding (Z1_mul_nat@{u} n)} {A : AbGroup@{u}}
   : ab_cokernel@{u+1} (ab_mul (A:=A) n)
-      $<~> ab_ext@{u u+1} (cyclic'@{u u u u u u u u} n) A.
+      $<~> ab_ext@{u u+1} (cyclic'@{u} n) A.
   (* We take a large cokernel in order to apply [abses_cokernel_iso]. *)
 Proof.
   pose (E := abses_from_inclusion (Z1_mul_nat n)).

@@ -239,7 +239,7 @@ Section Reduction.
   Defined.
 
   (** Finally we have defined the free group on [A] *)
-  Definition FreeGroup : Group.
+  Definition FreeGroup@{v | u <= v} : Group@{v}.
   Proof.
     srapply (Build_Group freegroup_type sgop_freegroup); repeat split; exact _.
   Defined.

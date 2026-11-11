@@ -22,12 +22,12 @@ Instance Z1_commutative `{Funext} : Commutative (@group_sgop Z1)
   := commutative_iso_commutative iso_subgroup_incl_freegroupon.
 (* TODO: [Funext] is used in [isfreegroupon_freegroup], but there is a comment there saying that it can be removed.  If that is done, can remove it from many results in this file. A different proof of this result, directly using the construction of the free group, could probably also avoid [Funext]. *)
 
-Definition ab_Z1 `{Funext} : AbGroup
-  := Build_AbGroup Z1 _.
+Definition ab_Z1@{u} `{Funext} : AbGroup@{u}
+  := Build_AbGroup Z1@{u} _.
 
 (** The universal property of [ab_Z1]. *)
 Lemma equiv_Z1_hom@{u} `{Funext} (A : AbGroup@{u})
-  : GroupIsomorphism (ab_hom ab_Z1@{u u u} A) A.
+  : GroupIsomorphism (ab_hom ab_Z1@{u} A) A.
 Proof.
   snapply Build_GroupIsomorphism'.
   - refine (_ oE (equiv_freegroup_rec A Unit)^-1).

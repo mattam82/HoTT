@@ -40,8 +40,8 @@ Context {Q : Type@{UQ} } {Qap : Apart@{UQ UQ} Q}
   {Qplus : Plus Q} {Qmult : Mult Q}
   {Qzero : Zero Q} {Qone : One Q} {Qneg : Negate Q} {Qrecip : DecRecip Q}
   {Qle : Le@{UQ UQ} Q} {Qlt : Lt@{UQ UQ} Q}
-  {QtoField : RationalsToField@{UQ UF UA UF} Q}
-  {Qrats : Rationals@{UQ UQ UQ UQ UQ UQ UF UQ UF UA} Q}
+  {QtoField : RationalsToField@{UQ UF UA} Q}
+  {Qrats : Rationals@{UQ UQ UA UF} Q}
   {Qtrivialapart : TrivialApart Q} {Qdec : DecidablePaths Q}
   {Qmeet : Meet Q} {Qjoin : Join Q} {Qlattice : LatticeOrder Qle}
   {Qle_total : TotalRelation (@le Q _)}

@@ -119,9 +119,9 @@ Section Extensions.
         exact (IH P' (snd ext h k)).
   Defined.
 
-  Definition equiv_extendable_pathsplit `{Funext} (n : nat)
-             {A B : Type} (C : B -> Type) (f : A -> B)
-  : ExtendableAlong n f C
+  Definition equiv_extendable_pathsplit@{i j k l} `{Funext} (n : nat)
+             {A : Type@{i}} {B : Type@{j}} (C : B -> Type@{k}) (f : A -> B)
+  : ExtendableAlong@{i j k l} n f C
     <~> PathSplit n (fun (g : forall b, C b) => g oD f).
   Proof.
     generalize dependent C; simple_induction n n IHn; intros C.
@@ -143,7 +143,7 @@ Section Extensions.
              {A : Type@{i}} {B : Type@{j}} {C : B -> Type@{k}} {f : A -> B}
   : ExtendableAlong@{i j k l} n.+2 f C
     -> IsEquiv (fun g => g oD f)
-    := isequiv_pathsplit n o (equiv_extendable_pathsplit@{i j k l l l l l l l l} n.+2 C f).
+    := isequiv_pathsplit n o (equiv_extendable_pathsplit@{i j k l} n.+2 C f).
 
   #[export] Instance ishprop_extendable `{Funext} (n : nat)
          {A B : Type} (C : B -> Type) (f : A -> B)

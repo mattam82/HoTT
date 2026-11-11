@@ -19,9 +19,9 @@ Local Open Scope path_scope.
 
 (** We define the suspension of a type X as the pushout of 1 <- X -> 1 *)
 Definition Susp@{u} (X : Type@{u}) := Pushout@{_ Set Set _} (const_tt X) (const_tt X).
-Definition North {X} : Susp X := pushl tt.
-Definition South {X} : Susp X := pushr tt.
-Definition merid {X} (x : X) : North = South := pglue x.
+Definition North@{u} {X : Type@{u}} : Susp@{u} X := pushl tt.
+Definition South@{u} {X : Type@{u}} : Susp@{u} X := pushr tt.
+Definition merid@{u} {X : Type@{u}} (x : X) : North@{u} = South@{u} := pglue x.
 
 (** We think of this as the HIT with two points [North] and [South] and a path [merid] between them *)
 
@@ -116,9 +116,9 @@ Global Arguments Susp_rec {X Y}%_type_scope H_N H_S H_merid%_function_scope _.
 
 Definition Susp_rec_beta_merid@{u v} {X : Type@{u}} {Y : Type@{v}}
   {H_N H_S : Y} {H_merid : X -> H_N = H_S} (x:X)
-  : ap (Susp_rec@{u u0} H_N H_S H_merid) (merid x) = H_merid x.
+  : ap (Susp_rec@{u v} H_N H_S H_merid) (merid x) = H_merid x.
 Proof.
-  napply Pushout_rec_beta_pglue@{v Set Set u u Set}.
+  napply Pushout_rec_beta_pglue@{v Set Set u}.
 Defined.
 
 Definition Susp_rec_beta_zigzag {X : Type@{u}} {Y : Type@{u0}}

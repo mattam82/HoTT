@@ -302,11 +302,11 @@ Context `{Funext} `{Univalence} (N : Type@{UN})
 Instance N_fullpartial : FullPartialOrder Ale Alt
   := fullpseudo_fullpartial@{UN UN Ularge}.
 
-Definition Z@{} : Type@{UN} := @quotient _ PairT.equiv@{UN UNalt} _.
+Definition Z@{} : Type@{UN} := @quotient _ PairT.equiv@{UN} _.
 
 #[export] Instance Z_of_pair : Cast (PairT.T N) Z := class_of _.
 
-#[export] Instance Z_of_N : Cast N Z := Compose Z_of_pair (PairT.inject@{UN UNalt} _).
+#[export] Instance Z_of_N : Cast N Z := Compose Z_of_pair (PairT.inject@{UN} _).
 
 Definition Z_path {x y} : PairT.equiv x y -> Z_of_pair x = Z_of_pair y
   := related_classes_eq _.
@@ -398,7 +398,7 @@ Defined.
 
 #[export] Instance Z_plus@{} : Plus Z.
 Proof.
-refine (Z_rec2 (fun x y => ' (PairT.pl@{UN UNalt} _ x y)) _).
+refine (Z_rec2 (fun x y => ' (PairT.pl@{UN} _ x y)) _).
 intros;apply Z_path;eapply PairT.pl_respects;trivial.
 Defined.
 
@@ -407,7 +407,7 @@ Definition Z_plus_compute q r : (' q) + (' r) = ' (PairT.pl _ q r)
 
 #[export] Instance Z_mult@{} : Mult Z.
 Proof.
-refine (Z_rec2 (fun x y => ' (PairT.ml@{UN UNalt} _ x y)) _).
+refine (Z_rec2 (fun x y => ' (PairT.ml@{UN} _ x y)) _).
 intros;apply Z_path;eapply PairT.ml_respects;trivial.
 Defined.
 
@@ -419,7 +419,7 @@ Definition Z_mult_compute q r : (' q) * (' r) = ' (PairT.ml _ q r)
 
 #[export] Instance Z_negate@{} : Negate Z.
 Proof.
-red. apply (Z_rec (fun x => ' (PairT.opp@{UN UNalt} _ x))).
+red. apply (Z_rec (fun x => ' (PairT.opp@{UN} _ x))).
 intros;apply Z_path;eapply PairT.opp_respects;trivial.
 Defined.
 
@@ -505,7 +505,7 @@ Defined.
 Proof. unfold Zle;exact _. Qed.
 
 Lemma Zle_def@{} : forall a b : PairT.T N,
-  @paths@{Uhuge} Type@{UN} (' a <= ' b) (PairT.Tle@{UN UNalt} a b).
+  @paths@{Uhuge} Type@{UN} (' a <= ' b) (PairT.Tle@{UN} a b).
 Proof. intros; exact idpath. Qed.
 
 Lemma Z_partial_order' : PartialOrder Zle.
@@ -1047,7 +1047,7 @@ red. apply (Z_rect _ Z_abs_def).
 exact Z_abs_respects'.
 Qed.
 
-#[export] Instance Z_abs@{} : IntAbs@{UN UN UN UN UN UN} Z N
+#[export] Instance Z_abs@{} : IntAbs@{UN UN UN UN UN} Z N
   := Z_abs'.
 
 Abbreviation n_to_z := (naturals_to_semiring N Z).

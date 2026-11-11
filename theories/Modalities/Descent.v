@@ -347,8 +347,8 @@ Definition equiv_OO_pullback {A B C : Type} (f : B -> A) (g : C -> A)
   := Build_Equiv _ _ _ (OO_inverts_functor_pullback_to_O f g).
 
 (** This is a strengthening of the "if" direction of CORS Proposition 2.31.  In 2.31, [g o f] is assumed to be [O']-connected, but here we only require it to be [O]-connected.  When [O = O'], this gives the nontrivial part of Theorem 3.1(xi) of RSS.  Note that we could also deduce Theorem 3.1(iii) of RSS from this. *)
-Definition OO_cancelL_conn_map
-           {Y X Z : Type} (f : Y -> X) (g : X -> Z)
+Definition OO_cancelL_conn_map@{y x z | y <= i, x <= i, z <= i}
+           {Y : Type@{y}} {X : Type@{x}} {Z : Type@{z}} (f : Y -> X) (g : X -> Z)
            `{IsConnMap O _ _ (g o f)} `{IsConnMap O' _ _ g}
   : IsConnMap O f.
 Proof.
