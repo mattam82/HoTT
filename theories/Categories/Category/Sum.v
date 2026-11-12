@@ -38,7 +38,8 @@ Section internals.
   Global Arguments sum_compose [_ _ _] _ _ / .
 End internals.
 
-Definition sum (C D : PreCategory) : PreCategory.
+Definition sum@{ob hom ob' hom' | } (C : PreCategory@{ob hom}) (D : PreCategory@{ob' hom'}) : 
+  PreCategory@{max(ob,ob') max(hom,hom')}.
 Proof.
   refine (@Build_PreCategory
             (C + D)
