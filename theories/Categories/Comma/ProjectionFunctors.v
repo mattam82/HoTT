@@ -23,32 +23,36 @@ Local Open Scope category_scope.
 Section comma.
   Local Open Scope type_scope.
   Context `{Funext}.
+  Universes p p' pt a a' b b' c c'.
 
-  Variable P : PreCategory -> Type.
+  Variable P : PreCategory@{p p'} -> Type@{pt}.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Abbreviation Cat := (@sub_pre_cat _ P HF).
+  Local Abbreviation Cat := (@sub_pre_cat@{p p' pt p p'} _ P HF).
 
-  Variables A B C : PreCategory.
+  Variables (A : PreCategory@{a a'}) (B : PreCategory@{b b'}) (C : PreCategory@{c c'}).
 
   Hypothesis PAB : P (A * B).
   Hypothesis P_comma : forall (S : Functor A C) (T : Functor B C),
                          P (S / T).
+
+  (** The slice category over [A * B], with the terminal category in [Set]: the notation [Cat / !x] would cast it to fresh universes. The objects of [Cat] are given their type explicitly: [(A * B; PAB)] would take it from [A * B], forcing [p] and [p'] to be the universes of [A * B]. *)
+  Local Abbreviation CatAB := (@comma_category@{_ _ _ _ Set Set} Cat terminal_category Cat (cc_identity_functor' Cat) (@from_terminal@{_ _ Set Set} _ terminal_category _ _ _ (@exist PreCategory@{p p'} P (A * B)%category PAB : Cat)))%category.
 
   Local Open Scope category_scope.
   Local Open Scope morphism_scope.
 
   Definition comma_category_projection_functor_object_of
              (ST : object ((A -> C)^op * (B -> C)))
-  : Cat / !((A * B; PAB) : Cat).
+  : CatAB.
   Proof.
-    exists (Basics.Overture.fst ST / Basics.Overture.snd ST; P_comma _ _) (center _).
+    exists (@exist PreCategory@{p p'} P (Basics.Overture.fst ST / Basics.Overture.snd ST) (P_comma _ _)) (center _).
     exact (comma_category_projection (Basics.Overture.fst ST) (Basics.Overture.snd ST)).
   Defined.
 
   Definition comma_category_projection_functor_morphism_of
              s d (m : morphism ((A -> C)^op * (B -> C)) s d)
-  : morphism (Cat / !((A * B; PAB) : Cat))
+  : morphism CatAB
              (comma_category_projection_functor_object_of s)
              (comma_category_projection_functor_object_of d).
   Proof.
@@ -115,10 +119,8 @@ Section comma.
   Qed.
 
   Definition comma_category_projection_functor
-  : Functor ((A -> C)^op * (B -> C))
-            (Cat / !((A * B; PAB) : Cat))
-    := Build_Functor ((A -> C)^op * (B -> C))
-                     (Cat / !((A * B; PAB) : Cat))
+  : Functor ((A -> C)^op * (B -> C)) CatAB
+    := Build_Functor ((A -> C)^op * (B -> C)) CatAB
                      comma_category_projection_functor_object_of
                      comma_category_projection_functor_morphism_of
                      comma_category_projection_functor_composition_of
@@ -128,45 +130,52 @@ End comma.
 Section slice_category_projection_functor.
   Local Open Scope type_scope.
   Context `{Funext}.
+  Universes p p' pt c c' d d'.
 
-  Variable P : PreCategory -> Type.
+  Variable P : PreCategory@{p p'} -> Type@{pt}.
   Context `{HF : forall C D, P C -> P D -> IsHSet (Functor C D)}.
 
-  Local Abbreviation Cat := (@sub_pre_cat _ P HF).
+  Local Abbreviation Cat := (@sub_pre_cat@{p p' pt p p'} _ P HF).
+  (** The terminal category, in [Set] *)
+  Local Abbreviation one := (NatCategory.Core.nat_category@{Set} (Overture.S Overture.O)).
 
-  Variables C D : PreCategory.
+  Variables (C : PreCategory@{c c'}) (D : PreCategory@{d d'}).
 
-  Hypothesis P1C : P (1 * C).
-  Hypothesis PC1 : P (C * 1).
+  (** The universes of [one] in the products and comma categories are given explicitly: they would otherwise be fresh universes above [Set], different from the ones of [comma_category_projection_functor]. *)
+  Hypothesis P1C : P (Category.Prod.prod@{Set Set c c'} one C).
+  Hypothesis PC1 : P (Category.Prod.prod@{c c' Set Set} C one).
   Hypothesis PC : P C.
-  Hypothesis P_comma : forall (S : Functor C D) (T : Functor 1 D), P (S / T).
-  Hypothesis P_comma' : forall (S : Functor 1 D) (T : Functor C D), P (S / T).
+  Hypothesis P_comma : forall (S : Functor C D) (T : Functor@{Set Set d d'} one D), P (@comma_category@{c c' d d' Set Set} C one D S T).
+  Hypothesis P_comma' : forall (S : Functor@{Set Set d d'} one D) (T : Functor C D), P (@comma_category@{Set Set d d' c c'} one C D S T).
 
   Local Open Scope functor_scope.
   Local Open Scope category_scope.
 
-  Local Abbreviation inv D := (@ExponentialLaws.Law1.Functors.inverse _ terminal_category _ _ _ D).
+  Local Abbreviation inv D := (@ExponentialLaws.Law1.Functors.inverse _ one _ _ _ D).
+
+  (** The slice category over [C], the object being given its type explicitly as in [comma] *)
+  Local Abbreviation CatC := (Cat / (@exist PreCategory@{p p'} P C PC : Cat)).
 
   (** ** Functor [(C → D)ᵒᵖ → D → (cat / C)] *)
   Definition slice_category_projection_functor
-  : object (((C -> D)^op) -> (D -> (Cat / ((C; PC) : Cat)))).
+  : object (((C -> D)^op) -> (D -> CatC)).
   Proof.
     refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).
     refine (_ o (Functor.Identity.identity (C -> D)^op,
                  inv D)).
-    refine (_ o @comma_category_projection_functor _ P HF C 1 D PC1 P_comma).
+    refine (_ o @comma_category_projection_functor _ P HF C one D PC1 P_comma).
     refine (cat_over_induced_functor _).
     hnf.
     exact (ProductLaws.Law1.functor _).
   Defined.
 
   Definition coslice_category_projection_functor
-  : object ((C -> D)^op -> (D -> (Cat / ((C; PC) : Cat)))).
+  : object ((C -> D)^op -> (D -> CatC)).
   Proof.
     refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).
     refine (_ o (Functor.Identity.identity (C -> D)^op,
                  inv D)).
-    refine (_ o @comma_category_projection_functor _ P HF C 1 D PC1 P_comma).
+    refine (_ o @comma_category_projection_functor _ P HF C one D PC1 P_comma).
     refine (cat_over_induced_functor _).
     hnf.
     exact (ProductLaws.Law1.functor _).
@@ -174,26 +183,26 @@ Section slice_category_projection_functor.
 
   (** ** Functor [(C → D) → Dᵒᵖ → (cat / C)] *)
   Definition slice_category_projection_functor'
-  : object ((C -> D) -> (D^op -> (Cat / ((C; PC) : Cat)))).
+  : object ((C -> D) -> (D^op -> CatC)).
   Proof.
     refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).
     refine (_ o (Functor.Identity.identity (C -> D),
                  (inv D)^op)).
     refine (_ o ProductLaws.Swap.functor _ _).
-    refine (_ o @comma_category_projection_functor _ P HF 1 C D P1C P_comma').
+    refine (_ o @comma_category_projection_functor _ P HF one C D P1C P_comma').
     refine (cat_over_induced_functor _).
     hnf.
     exact (ProductLaws.Law1.functor' _).
   Defined.
 
   Definition coslice_category_projection_functor'
-  : object ((C -> D) -> (D^op -> (Cat / ((C; PC) : Cat)))).
+  : object ((C -> D) -> (D^op -> CatC)).
   Proof.
     refine ((ExponentialLaws.Law4.Functors.inverse _ _ _) _).
     refine (_ o (Functor.Identity.identity (C -> D),
                  (inv D)^op)).
     refine (_ o ProductLaws.Swap.functor _ _).
-    refine (_ o @comma_category_projection_functor _ P HF 1 C D P1C P_comma').
+    refine (_ o @comma_category_projection_functor _ P HF one C D P1C P_comma').
     refine (cat_over_induced_functor _).
     hnf.
     exact (ProductLaws.Law1.functor' _).
